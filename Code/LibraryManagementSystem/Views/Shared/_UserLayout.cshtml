@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LibraryManagementSystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 1080px;
+            background: #F4F4F4;
+            overflow-y: auto;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Frame 201 - Sidebar */
+        .sidebar-container {
+            position: absolute;
+            width: 93px;
+            height: 1080px;
+            left: 0px;
+            top: 0px;
+            background: #000000;
+            z-index: 100;
+        }
+
+        /* Sidebar Logo (Group) */
+        .sidebar-logo {
+            position: absolute;
+            left: 22.58%;
+            right: 21.08%;
+            top: 2.5%;
+            height: 42px; /* 1080 * (1 - 0.9356 - 0.025) = 42.5px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sidebar Buttons */
+        .sidebar-btn {
+            position: absolute;
+            width: 93px;
+            height: 48px;
+            left: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-icon {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            left: 35px;
+            top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active-btn {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        .inactive-btn {
+            background: #000000;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar-container">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <img src="/images/logo.svg" style="width: 100%; height: 100%; object-fit: contain; filter: invert(1);" alt="Logo">
+        </div>
+
+        <a asp-controller="Home" asp-action="Index" class="sidebar-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active-btn" : "inactive-btn")" style="top: 158px;">
+            <div class="btn-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Vector 1 -->
+                    <rect x="10.42%" y="8.33%" width="35.41%" height="83.34%" fill="#000000"/>
+                    <!-- Vector 2 -->
+                    <rect x="54.17%" y="8.33%" width="35.41%" height="37.5%" fill="#000000"/>
+                    <!-- Vector 3 -->
+                    <rect x="54.17%" y="62.5%" width="35.41%" height="29.17%" fill="#000000"/>
+                </svg>
+            </div>
+        </a>
+
+        <a asp-controller="Home" asp-action="BorrowedBooks" class="sidebar-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowedBooks" || ViewContext.RouteData.Values["Action"]?.ToString() == "ReturnedBooks" ? "active-btn" : "inactive-btn")" style="top: 226px;">
+            <div class="btn-icon">
+                <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.9769 1.01693C18.1069 0.146929 16.8769 -0.19307 15.6869 0.10693L5.88693 2.55693C4.23693 2.96693 2.96693 4.24693 2.55693 5.88693L0.10693 15.6969C-0.19307 16.8869 0.146929 18.1169 1.01693 18.9869C1.67693 19.6369 2.54693 19.9969 3.44693 19.9969C3.72693 19.9969 4.01693 19.9669 4.29693 19.8869L14.1069 17.4369C15.7469 17.0269 17.0269 15.7569 17.4369 14.1069L19.8869 4.29693C20.1869 3.10693 19.8469 1.87693 18.9769 1.01693ZM9.99689 13.8769C7.85693 13.8769 6.11693 12.1369 6.11693 9.99689C6.11693 7.85693 7.85693 6.11693 9.99689 6.11693C12.1369 6.11693 13.8769 7.85693 13.8769 9.99689C13.8769 12.1369 12.1369 13.8769 9.99689 13.8769Z" fill="currentColor"/>
+                </svg>
+            </div>
+        </a>
+
+        <!-- Book Button -->
+        <a href="#" class="sidebar-btn" style="top: 294px; background: none;">
+            <svg width="93" height="48" viewBox="0 0 93 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="93" height="48" fill="black"/>
+                <path d="M57 16.8497V28.7397C57 29.7097 56.21 30.5997 55.24 30.7197L54.93 30.7597C53.29 30.9797 50.98 31.6597 49.12 32.4397C48.47 32.7097 47.75 32.2197 47.75 31.5097V17.5997C47.75 17.2297 47.96 16.8897 48.29 16.7097C50.12 15.7197 52.89 14.8397 54.77 14.6797H54.83C56.03 14.6797 57 15.6497 57 16.8497Z" fill="white"/>
+                <path d="M45.7083 16.7097C43.8783 15.7197 41.1083 14.8397 39.2283 14.6797H39.1583C37.9583 14.6797 36.9883 15.6497 36.9883 16.8497V28.7397C36.9883 29.7097 37.7783 30.5997 38.7483 30.7197L39.0583 30.7597C40.6983 30.9797 43.0083 31.6597 44.8683 32.4397C45.5183 32.7097 46.2383 32.2197 46.2383 31.5097V17.5997C46.2383 17.2197 46.0383 16.8897 45.7083 16.7097ZM39.9983 19.7397H42.2483C42.6583 19.7397 42.9983 20.0797 42.9983 20.4897C42.9983 20.9097 42.6583 21.2397 42.2483 21.2397H39.9983C39.5883 21.2397 39.2483 20.9097 39.2483 20.4897C39.2483 20.0797 39.5883 19.7397 39.9983 19.7397ZM42.9983 24.2397H39.9983C39.5883 24.2397 39.2483 23.9097 39.2483 23.4897C39.2483 23.0797 39.5883 22.7397 39.9983 22.7397H42.9983C43.4083 22.7397 43.7483 23.0797 43.7483 23.4897C43.7483 23.9097 43.4083 24.2397 42.9983 24.2397Z" fill="white"/>
+            </svg>
+        </a>
+
+        <!-- Exit Button -->
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="sidebar-btn inactive-btn" style="top: 931px;">
+                <div class="btn-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 16L21 12M21 12L17 8M21 12H9M13 16V17C13 18.6569 11.6569 20 10 20H5C3.34315 20 2 18.6569 2 17V7C2 5.34315 3.34315 4 5 4H10C11.6569 4 13 5.34315 13 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </button>
+        </form>
+    </aside>
+
+    <header style="position: absolute; width: 1827px; height: 71px; left: 93px; top: 0px; background: #FFFFFF; z-index: 90;">
+        <!-- User Section -->
+        <div style="position: absolute; width: 34px; height: 34px; left: 20px; top: 19px;">
+            <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Vector 1 (Head) -->
+                <rect x="29.17%" y="8.33%" width="41.66%" height="41.67%" rx="20.83%" fill="#000000"/>
+                <!-- Vector 2 (Body) -->
+                <path d="M12.13 60.42H87.88C87.88 60.42 85 93.75 50 93.75C15 93.75 12.13 60.42 12.13 60.42Z" fill="#000000"/>
+            </svg>
+        </div>
+        <div style="position: absolute; left: 61px; top: 16px; font-weight: 600; font-size: 16px; color: #000000;">Nisal Gunasekara</div>
+        <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">User</div>
+
+        <!-- Right Side Section -->
+        <div style="position: absolute; left: 1681px; top: 15px; font-weight: 700; font-size: 16px; color: #000000;">12:29 PM</div>
+        <div style="position: absolute; left: 1669px; top: 39px; font-weight: 500; font-size: 13px; color: #000000;">Sep 02, 2023</div>
+        
+        <!-- Line 16 -->
+        <div style="position: absolute; width: 2px; height: 58px; left: 1764px; top: 7px; background: #000000;"></div>
+        
+        <!-- Settings Icon -->
+        <div style="position: absolute; width: 38px; height: 38px; left: 1773px; top: 17px; display: flex; align-items: center; justify-content: center;">
+            <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M28.6583 10.5433C25.7925 10.5433 24.6208 8.51659 26.0458 6.03076C26.8692 4.58993 26.3783 2.75326 24.9375 1.92993L22.1983 0.362427C20.9475 -0.38174 19.3325 0.0615939 18.5883 1.31243L18.4142 1.61326C16.9892 4.09909 14.6458 4.09909 13.205 1.61326L13.0308 1.31243C12.3183 0.0615939 10.7033 -0.38174 9.4525 0.362427L6.71333 1.92993C5.2725 2.75326 4.78167 4.60576 5.605 6.04659C7.04583 8.51659 5.87417 10.5433 3.00833 10.5433C1.36167 10.5433 0 11.8891 0 13.5516V16.3383C0 17.9849 1.34583 19.3466 3.00833 19.3466C5.87417 19.3466 7.04583 21.3733 5.605 23.8591C4.78167 25.2999 5.2725 27.1366 6.71333 27.9599L9.4525 29.5274C10.7033 30.2716 12.3183 29.8283 13.0625 28.5774L13.2367 28.2766C14.6617 25.7908 17.005 25.7908 18.4458 28.2766L18.62 28.5774C19.3642 29.8283 20.9792 30.2716 22.23 29.5274L24.9692 27.9599C26.41 27.1366 26.9008 25.2841 26.0775 23.8591C24.6367 21.3733 25.8083 19.3466 28.6742 19.3466C30.3208 19.3466 31.6825 18.0008 31.6825 16.3383V13.5516C31.6667 11.9049 30.3208 10.5433 28.6583 10.5433ZM15.8333 20.0908C12.9992 20.0908 10.6875 17.7791 10.6875 14.9449C10.6875 12.1108 12.9992 9.79909 15.8333 9.79909C18.6675 9.79909 20.9792 12.1108 20.9792 14.9449C20.9792 17.7791 18.6675 20.0908 15.8333 20.0908Z" fill="black"/>
+            </svg>
+        </div>
+    </header>
+
+    <main style="position: absolute; left: 93px; top: 71px; width: 1827px; height: 1009px;">
+        @RenderBody()
+    </main>
+</body>
+</html>

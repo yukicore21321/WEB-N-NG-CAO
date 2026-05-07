@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin LibraryPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#6366f1',
+                        accent: '#f59e0b',
+                        dark: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#f8fafc] text-slate-900 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out shadow-sm flex flex-col">
+            <div class="p-6 flex items-center space-x-3">
+                <img src="~/images/logo.svg" class="w-10 h-10" alt="Admin Logo" />
+                <span class="font-display text-xl font-bold tracking-tight text-slate-800">Library<span class="text-primary">Admin</span></span>
+            </div>
+
+            <nav class="flex-grow px-4 pb-4 space-y-1 overflow-y-auto">
+                <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng quan</div>
+                <a asp-controller="Admin" asp-action="Index" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "text-slate-600")">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1  1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="px-3 py-2 mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider">Quản lý</div>
+                <a asp-controller="Admin" asp-action="Books" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Books" ? "active" : "")">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span>Quản lý Sách</span>
+                </a>
+                <a asp-controller="Admin" asp-action="BorrowRecords" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowRecords" ? "active" : "")">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                    <span>Mượn / Trả</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Categories" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" ? "active" : "")">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span>Thể loại</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Users" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span>Người dùng</span>
+                </a>
+
+                <div class="px-3 py-2 mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider">Khác</div>
+                <a href="/" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    <span>Xem giao diện User</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <div class="flex items-center space-x-3 px-3 py-2">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold">A</div>
+                    <div class="flex-grow overflow-hidden">
+                        <p class="text-sm font-semibold text-slate-800 truncate">Administrator</p>
+                        <p class="text-xs text-slate-500 truncate">admin@librarypro.com</p>
+                    </div>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                         <button type="submit" class="text-slate-400 hover:text-red-500 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-grow overflow-y-auto">
+            <!-- Topbar -->
+            <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h2 class="text-lg font-bold text-slate-800 font-display">@ViewData["Title"]</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden sm:block">
+                        <input type="text" placeholder="Tìm nhanh..." class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-64 outline-none transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button class="p-2 text-slate-400 hover:text-slate-600 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-6">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

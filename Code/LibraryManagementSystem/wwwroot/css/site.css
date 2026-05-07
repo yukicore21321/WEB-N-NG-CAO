@@ -1,0 +1,863 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #1e40af;
+    --primary-light: #3b82f6;
+    --secondary: #6366f1;
+    --accent: #f59e0b;
+    --bg-main: #f8fafc;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: #1e293b;
+}
+
+h1, h2, h3, .font-display {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Glassmorphism */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Sidebar Hover */
+.sidebar-link {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-link:hover {
+    background: rgba(30, 64, 175, 0.05);
+    color: var(--primary);
+    transform: translateX(4px);
+}
+
+.sidebar-link.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+}
+
+/* Card Effects */
+.premium-card {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    border: 1px solid #f1f5f9;
+}
+
+.premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+/* Gradient Text */
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Figma Login Styles - Precise Absolute Positioning */
+.login-container {
+    width: 930px;
+    height: 575px;
+    background: #FFFFFF;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    margin: auto;
+}
+
+.login-left-section {
+    position: absolute;
+    width: 461px;
+    height: 575px;
+    left: 0;
+    top: 0;
+}
+
+.login-black-section {
+    position: absolute;
+    width: 469px;
+    height: 575px;
+    left: 461px;
+    top: 0px;
+    background: #000000;
+    border-radius: 40px 0px 0px 40px;
+}
+
+.font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Left Section Elements */
+.left-logo-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 9.91%;
+    width: 64px; /* Kích thước hợp lý cho logo */
+    height: 64px;
+}
+
+.welcome-text {
+    position: absolute;
+    width: 254px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 133px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.login-desc {
+    position: absolute;
+    width: 260px;
+    height: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 203px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.input-frame {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    background: #FFFFFF;
+    border: 1px solid #3D3E3E;
+    border-radius: 12px;
+    font-family: 'Montserrat';
+    font-size: 13px;
+    outline: none;
+}
+
+.username-frame {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 255px;
+}
+
+.password-frame {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 316px;
+}
+
+.forgot-password {
+    position: absolute;
+    width: 267px; /* Khớp với width của input */
+    height: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 374px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 140%;
+    color: #000000;
+}
+
+.btn-signin {
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 420px;
+    background: #000000;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* Forgot Password Specific Styles */
+.forgot-black-section {
+    position: absolute;
+    width: 469px;
+    height: 575px;
+    left: 0px;
+    top: 0px;
+    background: #000000;
+    border-radius: 0px 40px 40px 0px;
+}
+
+.forgot-left-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 21.74%;
+    width: 320px;
+    height: auto;
+}
+
+.forgot-left-text {
+    position: absolute;
+    left: 20.68%;
+    right: 20.47%;
+    top: 62.96%;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 140%;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.forgot-right-section {
+    position: absolute;
+    width: 461px;
+    height: 575px;
+    left: 469px;
+    top: 0;
+}
+
+.forgot-title {
+    position: absolute;
+    width: 257px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 207px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.forgot-right-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 120px; /* Phía trên Forgot Password title */
+    width: 64px;
+    height: auto;
+}
+
+.forgot-desc {
+    position: absolute;
+    width: 267px;
+    height: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 266px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.forgot-input-frame {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 328px;
+}
+
+.btn-reset {
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 391px;
+    background: #000000;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-back-right {
+    box-sizing: border-box;
+    position: absolute;
+    width: 60px;
+    height: 22px;
+    right: 0px;
+    top: 12px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 20px 0px 0px 20px;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    text-decoration: none;
+}
+
+.right-logo-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 21.74%;
+    width: 320px; /* Phóng to logo thêm nữa */
+    height: auto;
+}
+
+.right-text {
+    position: absolute;
+    left: 25.37%;
+    right: 25.37%;
+    top: 62.61%;
+    bottom: 34.26%;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 140%;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.btn-signup-small {
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 420px; /* Đồng bộ độ cao với nút SIGN IN */
+    width: 267px; /* Khớp kích thước với nút SIGN IN để cân đối */
+    height: 42px;
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-signup-small:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+/* OTP Specific Styles */
+.otp-left-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 22.09%;
+    width: 64px;
+    height: auto;
+}
+
+.otp-title {
+    position: absolute;
+    width: 350px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 207px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.otp-desc {
+    position: absolute;
+    width: 300px;
+    height: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 266px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.otp-input-frame {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 328px;
+}
+
+.btn-verify {
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 391px;
+    background: #000000;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* Reset Password Specific Styles */
+.reset-title {
+    position: absolute;
+    width: 300px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 207px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.reset-desc {
+    position: absolute;
+    width: 300px;
+    height: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 265px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.reset-input-new {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 322px;
+}
+
+.reset-input-confirm {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 376px;
+}
+
+.btn-reset-confirm {
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 438px;
+    background: #000000;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* Register Specific Styles */
+.register-title {
+    position: absolute;
+    width: 300px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 78px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.register-desc {
+    position: absolute;
+    width: 300px;
+    height: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 163px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    color: #000000;
+    text-align: center;
+}
+
+.register-input-name {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 216px;
+    width: 300px;
+}
+
+.register-input-email {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 283px;
+    width: 300px;
+}
+
+.register-input-username {
+    left: 50%;
+    transform: translateX(-50% + -95px); /* Offset to left */
+    top: 350px;
+    width: 180px;
+}
+
+.register-input-password {
+    left: 50%;
+    transform: translateX(-50% + 95px); /* Offset to right */
+    top: 350px;
+    width: 180px;
+}
+
+.btn-register {
+    position: absolute;
+    width: 267px;
+    height: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 438px;
+    background: #000000;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-signin-small-register {
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 420px;
+    width: 267px;
+    height: 42px;
+    background: #000000;
+    border: 1px solid #FFFFFF;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* User Dashboard Specific Styles - Precise Absolute Positioning */
+.dashboard-container {
+    position: relative;
+    width: 1827px;
+    height: 1009px;
+    background: #F4F4F4;
+}
+
+.dashboard-card {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-line {
+    position: absolute;
+    width: 148px;
+    height: 0px;
+    left: 24px;
+    top: 28px;
+    border: 2px solid #000000;
+    transform: rotate(-90deg);
+    transform-origin: left center;
+}
+
+.card-icon-frame {
+    position: absolute;
+    width: 127px;
+    height: 140px;
+    left: 47px;
+    top: 32px;
+    background: rgba(167, 167, 167, 0.48);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-title {
+    position: absolute;
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 140%;
+    color: #151619;
+    left: 203px;
+    top: 53px;
+}
+
+.dashboard-quote-box {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.quote-text {
+    position: absolute;
+    left: 97px;
+    top: 87px;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 140%;
+    color: #000000;
+    width: 809px;
+}
+
+.quote-author {
+    position: absolute;
+    left: 747px;
+    top: 332px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 20px;
+    color: #151619;
+}
+
+.pie-chart-container {
+    position: absolute;
+    left: 62.29%;
+    top: 14.35%;
+    width: 34.9%;
+    height: 62.04%;
+}
+
+.pie-chart-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+}
+
+.dashboard-stats-card {
+    position: absolute;
+    width: 515px;
+    height: 148px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stats-line {
+    position: absolute;
+    width: 114.02px;
+    height: 0px;
+    left: 149px;
+    top: 17px;
+    border: 2px solid #000000;
+    transform: rotate(-90deg);
+    transform-origin: left center;
+}
+
+.stats-logo {
+    position: absolute;
+    left: 37px;
+    top: 41px;
+    width: 73px;
+    height: 61px;
+}
+
+.stats-text {
+    position: absolute;
+    left: 233px;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 22px;
+    color: #000000;
+}
+
+.stats-dot {
+    position: absolute;
+    left: 181px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.user-quote-box {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 2px solid #3B82F6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 97px;
+}
+
+.user-quote-text {
+    font-family: 'Montserrat';
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 140%;
+    color: #000000;
+}
+
+.user-quote-author {
+    position: absolute;
+    right: 65px;
+    bottom: 32px;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 20px;
+    color: #151619;
+}
+
+.user-stats-card {
+    position: absolute;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.user-stats-line {
+    position: absolute;
+    width: 114.02px;
+    height: 0px;
+    left: 149px;
+    top: 17px;
+    border: 2px solid #000000;
+    transform: rotate(-90deg);
+    transform-origin: left center;
+}
+
+.user-stats-logo {
+    position: absolute;
+    left: 7.18%;
+    top: 27.71%;
+    width: 73px;
+    height: 61px;
+}
+
+.user-stats-text {
+    position: absolute;
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 140%;
+    color: #000000;
+    left: 233px;
+}
+
+.user-pie-chart-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-middle-logo {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

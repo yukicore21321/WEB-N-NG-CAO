@@ -1,0 +1,65 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+
+@{
+    ViewData["Title"] = "Tủ sách số";
+}
+
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-extrabold text-gray-900 font-display">Tủ sách số</h1>
+                <p class="mt-2 text-gray-500">Khám phá toàn bộ kho tài liệu của chúng tôi.</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex space-x-3">
+                <div class="relative">
+                    <input type="text" placeholder="Tìm kiếm sách..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="bg-white rounded-3xl p-12 text-center border border-dashed border-gray-300">
+                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+                    📚
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">Chưa có sách nào</h3>
+                <p class="mt-1 text-gray-500 text-sm">Hệ thống đang được cập nhật dữ liệu. Vui lòng quay lại sau!</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                @foreach (var item in Model)
+                {
+                    <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
+                        <div class="aspect-[2/3] relative overflow-hidden">
+                            <img src="@(string.IsNullOrEmpty(item.ImagePath) ? "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" : item.ImagePath)" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="@item.Title">
+                            <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-[10px] font-bold text-primary uppercase shadow-sm">
+                                @(item.FilePath != null ? "Sách số" : "Sách giấy")
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-grow flex-col">
+                            <p class="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">@item.Category?.Name</p>
+                            <h3 class="text-gray-900 font-bold text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors cursor-pointer">@item.Title</h3>
+                            <p class="text-gray-500 text-xs mb-4">Tác giả: @item.Author</p>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="text-primary font-bold text-xs">Còn @item.AvailableCopies bản</span>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="p-2 bg-gray-50 rounded-lg text-gray-400 hover:bg-primary hover:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

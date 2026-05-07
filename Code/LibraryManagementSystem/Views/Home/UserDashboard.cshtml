@@ -1,0 +1,116 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "User Dashboard";
+}
+
+<!-- Card 1: Your Borrowed Book List -->
+<a asp-action="BorrowedBooks" style="position: absolute; width: 509px; height: 204px; left: 37px; top: 36px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); text-decoration: none; display: block; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+    <!-- Line 17 (Vertical Line) -->
+    <div style="position: absolute; width: 2px; height: 148px; left: 24px; top: 28px; background: #000000;"></div>
+
+    <!-- Frame 224 (Grey Background for Icon) -->
+    <div style="position: absolute; width: 127px; height: 140px; left: 47px; top: 32px; background: rgba(167, 167, 167, 0.48); border-radius: 12px;">
+        <!-- book-square 2 SVG -->
+        <div style="position: absolute; width: 81px; height: 81px; left: 23px; top: 29px;">
+            <svg width="81" height="81" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M47.8912 0H19.6087C7.32375 0 0 7.32375 0 19.6087V47.8575C0 60.1763 7.32375 67.5 19.6087 67.5H47.8575C60.1425 67.5 67.4662 60.1763 67.4662 47.8913V19.6087C67.5 7.32375 60.1762 0 47.8912 0ZM32.0625 51.4688C32.0625 52.6838 30.8475 53.4937 29.7337 53.0212C25.65 51.2662 20.3175 49.6462 16.605 49.1737L15.9637 49.1062C13.905 48.8362 12.2175 46.9125 12.2175 44.82V18.8325C12.2175 16.2337 14.31 14.31 16.875 14.5125C21.0937 14.85 27.3375 16.875 31.2525 19.1025C31.7925 19.4062 32.0625 19.98 32.0625 20.5538V51.4688ZM55.2825 44.7863C55.2825 46.8787 53.595 48.8025 51.5362 49.0725L50.8275 49.14C47.1487 49.6462 41.85 51.2325 37.7662 52.9538C36.6525 53.4263 35.4375 52.6162 35.4375 51.4012V20.52C35.4375 19.9125 35.7412 19.3387 36.2812 19.035C40.1962 16.8412 46.305 14.8838 50.4562 14.5125H50.5912C53.19 14.5125 55.2825 16.605 55.2825 19.2038V44.7863Z" fill="black"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Title Text -->
+    <div style="position: absolute; width: 285px; height: 98px; left: 203px; top: 53px; font-family: 'Montserrat'; font-style: normal; font-weight: 700; font-size: 35px; line-height: 140%; color: #151619;">
+        Your Borrowed Book List
+    </div>
+</a>
+
+<!-- Card 2: Your Returned Book List -->
+<a asp-action="ReturnedBooks" style="position: absolute; width: 509px; height: 204px; left: 583px; top: 36px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); text-decoration: none; display: block; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+    <!-- Line 17 (Vertical Line) -->
+    <div style="position: absolute; width: 2px; height: 148px; left: 24px; top: 28px; background: #000000;"></div>
+
+    <!-- Frame 224 (Grey Background for Icon) -->
+    <div style="position: absolute; width: 127px; height: 140px; left: 47px; top: 32px; background: rgba(167, 167, 167, 0.48); border-radius: 12px;">
+        <!-- redo 1 SVG -->
+        <div style="position: absolute; width: 81px; height: 81px; left: 23px; top: 29px;">
+            <svg width="81" height="81" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M47.8912 0H19.6087C7.32375 0 0 7.32375 0 19.6087V47.8575C0 60.1763 7.32375 67.5 19.6087 67.5H47.8575C60.1425 67.5 67.4662 60.1763 67.4662 47.8913V19.6087C67.5 7.32375 60.1762 0 47.8912 0ZM52.4137 27.7425L47.115 33.0412C46.6087 33.5475 45.9675 33.7838 45.3262 33.7838C44.685 33.7838 44.0437 33.5475 43.5375 33.0412C42.5587 32.0625 42.5587 30.4425 43.5375 29.4637L44.415 28.5863H27.27C22.95 28.5863 19.4062 32.0963 19.4062 36.45C19.4062 40.8037 22.9162 44.3138 27.27 44.3138H43.875C45.2587 44.3138 46.4062 45.4613 46.4062 46.845C46.4062 48.2288 45.2587 49.3762 43.875 49.3762H27.27C20.1487 49.3762 14.3437 43.5713 14.3437 36.45C14.3437 29.3288 20.1487 23.5238 27.27 23.5238H44.6512L43.5375 22.4437C42.5587 21.465 42.5587 19.845 43.5375 18.8663C44.5162 17.8875 46.1362 17.8875 47.115 18.8663L52.4137 24.165C53.3925 25.1775 53.3925 26.7638 52.4137 27.7425Z" fill="black"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Title Text -->
+    <div style="position: absolute; width: 278px; height: 98px; left: 203px; top: 53px; font-family: 'Montserrat'; font-style: normal; font-weight: 700; font-size: 35px; line-height: 140%; color: #151619;">
+        Your Returned Book List
+    </div>
+</a>
+
+<!-- Card 3: Let's browse available book inventory -->
+<div style="position: absolute; width: 636px; height: 204px; left: 37px; top: 280px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);">
+    <!-- Line 17 (Vertical Line) -->
+    <div style="position: absolute; width: 2px; height: 148px; left: 24px; top: 28px; background: #000000;"></div>
+
+    <!-- Frame 224 (Grey Background for Icon) -->
+    <div style="position: absolute; width: 127px; height: 140px; left: 47px; top: 32px; background: rgba(167, 167, 167, 0.48); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 81px; height: 81px;">
+            <img src="/images/1.svg" style="width: 100%; height: 100%;" alt="Inventory Icon" />
+        </div>
+    </div>
+
+    <!-- Title Text -->
+    <div style="position: absolute; width: 417px; height: 98px; left: 203px; top: 53px; font-family: 'Montserrat'; font-style: normal; font-weight: 700; font-size: 35px; line-height: 140%; color: #151619;">
+        Let's browse available book inventory
+    </div>
+</div>
+
+<!-- Group Element -->
+<div style="position: absolute; left: 756px; top: 346px; width: 264px; height: 157px; display: flex; align-items: center; justify-content: center;">
+    <img src="/images/Group.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Group Icon" />
+</div>
+
+<!-- Frame 236 -->
+<div style="position: absolute; width: 1004px; height: 392px; left: 61px; top: 572px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);">
+    <!-- Quote Text -->
+    <div style="position: absolute; width: 809px; height: 196px; left: 97px; top: 87px; font-family: 'Montserrat'; font-style: normal; font-weight: 600; font-size: 35px; line-height: 140%; color: #000000;">
+        "Embarking on the journey of reading fosters personal growth, nurturing a path towards excellence and the refinement of character."
+    </div>
+    <!-- Signature Text -->
+    <div style="position: absolute; width: 192px; height: 28px; left: 747px; top: 332px; font-family: 'Montserrat'; font-style: normal; font-weight: 400; font-size: 20px; line-height: 140%; color: #151619;">
+        ~ BookWorm Team
+    </div>
+</div><!-- Large Pie Chart -->
+<div style="position: absolute; left: 1103px; top: 84px; width: 670px; height: 670px; pointer-events: none;">
+    <img src="/images/path853.png" style="position: absolute; width: 670px; height: 670px; left: 0; top: 0; transform: matrix(1, 0, 0, -1, 0, 0);" alt="Chart Base" />
+    <img src="/images/path861.png" style="position: absolute; width: 572px; height: 670px; left: 0; top: 0; transform: matrix(1, 0, 0, -1, 0, 0);" alt="Chart Data" />
+</div>
+
+<!-- Frame 217 -->
+<div style="position: absolute; width: 515px; height: 148px; left: 1180px; top: 810px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);">
+    <!-- Line 16 (Vertical) -->
+    <div style="position: absolute; width: 2px; height: 114.02px; left: 149px; top: 17px; background: #000000;"></div>
+
+    <!-- Total Borrowed Books Text -->
+    <div style="position: absolute; width: 245px; height: 31px; left: 233px; top: 27.02px; font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 22px; line-height: 140%; color: #000000;">
+        Total Borrowed Books
+    </div>
+
+    <!-- Total Returned Books Text -->
+    <div style="position: absolute; width: 241px; height: 31px; left: 233px; top: 90.02px; font-family: 'Montserrat'; font-style: normal; font-weight: 500; font-size: 22px; line-height: 140%; color: #000000;">
+        Total Returned Books
+    </div>
+
+    <!-- path917 - 1 (Top) -->
+    <div style="position: absolute; left: 35.15%; right: 60.19%; top: 20.96%; bottom: 62.83%; transform: matrix(1, 0, 0, -1, 0, 0);">
+        <img src="/images/path917 (1).png" style="width: 100%; height: 100%; object-fit: contain;" alt="" />
+    </div>
+
+    <!-- path917 - 2 (Bottom) -->
+    <div style="position: absolute; left: 35.15%; right: 60.19%; top: 63.53%; bottom: 20.26%; transform: matrix(1, 0, 0, -1, 0, 0);">
+        <img src="/images/path917.png" style="width: 100%; height: 100%; object-fit: contain;" alt="" />
+    </div>
+
+    <!-- Vector Icon (Left Side) -->
+    <div style="position: absolute; left: 7.18%; right: 77.33%; top: 27.71%; bottom: 27.15%; display: flex; align-items: center; justify-content: center;">
+        <img src="/images/SvgjsG2242.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Stats Icon" />
+    </div>
+</div>

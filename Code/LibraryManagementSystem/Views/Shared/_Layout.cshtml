@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Thư Viện Số Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#6366f1',
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f8fafc]">
+    <header class="glass sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <a asp-controller="Home" asp-action="Index" class="flex items-center space-x-3">
+                        <img src="~/images/logo.svg" class="w-12 h-12" alt="LibraryPro Logo" />
+                        <span class="font-display text-2xl font-bold text-slate-900 tracking-tight">Library<span class="text-primary">Pro</span></span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-10">
+                    <a asp-controller="Home" asp-action="Index" class="text-slate-600 hover:text-primary font-semibold transition-all">Trang chủ</a>
+                    <a asp-controller="Books" asp-action="Index" class="text-slate-600 hover:text-primary font-semibold transition-all">Tủ sách số</a>
+                    <a asp-controller="Admin" asp-action="Categories" class="text-slate-600 hover:text-primary font-semibold transition-all">Thể loại</a>
+                    <a asp-controller="Admin" asp-action="Index" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-lg">Quản lý (Admin)</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-grow animate-fade-in">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-16 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <span class="font-display text-xl font-bold text-slate-900">LibraryPro</span>
+                    </div>
+                    <p class="text-slate-500 max-w-sm leading-relaxed">Hệ thống quản lý thư viện số hiện đại, giúp bạn tiếp cận tri thức mọi lúc, mọi nơi với trải nghiệm người dùng tuyệt vời nhất.</p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest mb-6">Khám phá</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Tìm kiếm sách</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Quy định mượn trả</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Tin tức thư viện</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-widest mb-6">Hỗ trợ</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-primary transition-colors">Liên hệ hỗ trợ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-slate-400 text-sm">&copy; @DateTime.Now.Year LibraryPro. Designed for excellence.</p>
+                <div class="flex space-x-8 mt-6 md:mt-0">
+                    <a href="#" class="text-slate-400 hover:text-primary transition-colors">Facebook</a>
+                    <a href="#" class="text-slate-400 hover:text-primary transition-colors">Twitter</a>
+                    <a href="#" class="text-slate-400 hover:text-primary transition-colors">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

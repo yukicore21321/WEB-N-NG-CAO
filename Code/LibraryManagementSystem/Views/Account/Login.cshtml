@@ -1,0 +1,51 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - LibraryPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center font-montserrat">
+    <div class="login-container">
+        <!-- Left Side: Sign In Form -->
+        <div class="login-left-section">
+            <div class="left-logo-container">
+                <img src="~/images/logo.svg" class="w-full h-full object-contain" alt="Logo" />
+            </div>
+
+            <h1 class="welcome-text">Welcome Back !!</h1>
+            <p class="login-desc">Please enter your credentials to log in</p>
+
+            <form asp-action="Login" method="post">
+                <input type="text" name="username" placeholder="Username" class="input-frame username-frame" required>
+                <input type="password" name="password" placeholder="Password" class="input-frame password-frame" required>
+
+                <div class="forgot-password">
+                    <a asp-action="ForgotPassword" class="hover:underline">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-signin">SIGN IN</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Black Section -->
+        <div class="login-black-section">
+            <div class="right-logo-container">
+                <img src="~/images/logo2.svg" class="w-full h-full object-contain" alt="LibraryPro Logo" />
+            </div>
+            
+            <p class="right-text">
+                New to our platform? Sign Up now.
+            </p>
+
+            <a asp-action="Register" class="btn-signup-small">SIGN UP</a>
+        </div>
+    </div>
+</body>
+</html>

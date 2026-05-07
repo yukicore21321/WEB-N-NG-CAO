@@ -1,0 +1,62 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - LibraryPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* Special handling for side-by-side inputs on register */
+        .register-input-username {
+            left: calc(50% - 100px) !important;
+            transform: translateX(-50%) !important;
+            width: 180px !important;
+        }
+        .register-input-password {
+            left: calc(50% + 100px) !important;
+            transform: translateX(-50%) !important;
+            width: 180px !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center font-montserrat">
+    <div class="login-container">
+        <!-- Left Side: Black Section -->
+        <div class="forgot-black-section">
+            <div class="forgot-left-logo">
+                <img src="~/images/logo2.svg" class="w-full h-full object-contain" alt="LibraryPro Logo" />
+            </div>
+            
+            <p class="forgot-left-text" style="top: 60%">
+                Already have Account? Sign In now.
+            </p>
+
+            <a asp-action="Login" class="btn-signin-small-register">SIGN IN</a>
+        </div>
+
+        <!-- Right Side: Register Form -->
+        <div class="forgot-right-section">
+            <div class="forgot-right-logo" style="top: 15px; left: 85%">
+                <img src="~/images/logo3.svg" class="w-full h-full object-contain" alt="Logo" />
+            </div>
+
+            <h1 class="register-title">Sign Up</h1>
+            <p class="register-desc">Please provide your information to sign up.</p>
+
+            <form asp-action="Register" method="post">
+                <input type="text" name="name" placeholder="Name" class="input-frame register-input-name" required>
+                <input type="email" name="email" placeholder="Email" class="input-frame register-input-email" required>
+                <input type="text" name="username" placeholder="Username" class="input-frame register-input-username" required>
+                <input type="password" name="password" placeholder="Password" class="input-frame register-input-password" required>
+                
+                <button type="submit" class="btn-register">SIGN UP</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

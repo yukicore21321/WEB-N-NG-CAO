@@ -1,0 +1,66 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Borrowed Books";
+}
+
+<div style="position: relative; width: 100%; height: 100%; padding: 40px;">
+    <!-- Vertical Text: BOOKWORM -->
+    <div style="position: absolute; left: 20px; top: 150px; font-family: 'Montserrat'; font-style: normal; font-weight: 900; font-size: 40px; line-height: 120%; color: rgba(21, 22, 25, 0.05); text-transform: uppercase; writing-mode: vertical-rl; letter-spacing: 0.5em; pointer-events: none;">
+        BOOKWORM
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div style="display: flex; gap: 40px; margin-bottom: 40px; border-bottom: 2px solid #E0E0E0; padding-bottom: 10px;">
+        <a asp-action="BorrowedBooks" style="font-weight: 700; font-size: 24px; color: #000000; text-decoration: none; position: relative;">
+            Borrowed Books
+            <div style="position: absolute; width: 100%; height: 4px; bottom: -12px; background: #000000; border-radius: 2px;"></div>
+        </a>
+        <a asp-action="ReturnedBooks" style="font-weight: 500; font-size: 24px; color: #9E9E9E; text-decoration: none;">
+            Returned Books
+        </a>
+        
+        <!-- Search Bar -->
+        <div style="margin-left: auto; position: relative; width: 400px;">
+            <input type="text" placeholder="Search by ID" style="width: 100%; height: 50px; background: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 25px; padding: 0 50px 0 20px; font-family: 'Montserrat'; font-size: 16px; outline: none;" />
+            <div style="position: absolute; right: 15px; top: 13px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 21L16.65 16.65" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Container -->
+    <div style="background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #F9F9F9; border-bottom: 1px solid #EEEEEE;">
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">ID</th>
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">User ID</th>
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">Amount</th>
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">Due Date</th>
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">Date & Time</th>
+                    <th style="padding: 20px 30px; font-weight: 700; font-size: 18px; color: #000000;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < 12; i++)
+                {
+                    <tr style="border-bottom: 1px solid #EEEEEE; transition: background 0.3s;" onmouseover="this.style.background='#F5F5F5'" onmouseout="this.style.background='white'">
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">1</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">1</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">002 Books</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">13 - 03 - 2024</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">25-02-2024 10:39:43</td>
+                        <td style="padding: 20px 30px;">
+                            <button style="background: #000000; color: #FFFFFF; border: none; padding: 8px 24px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                                Return
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
