@@ -59,8 +59,8 @@
                     <div style="flex: 0 0 350px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@book.Title">@book.Title</div>
                     <div style="flex: 0 0 250px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center;">@(book.Category?.Name ?? "Educational")</div>
                     <div style="flex: 0 0 200px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center;">English</div>
-                    <div style="flex: 0 0 300px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: @(book.AvailableCopies > 0 ? "#151619" : "#E53935"); text-align: center;">
-                        @(book.AvailableCopies > 0 ? "Available" : "Borrowed")
+                    <div style="flex: 0 0 300px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: @(book.AvailableQuantity > 0 ? "#151619" : "#E53935"); text-align: center;">
+                        @(book.AvailableQuantity > 0 ? "Available" : "Borrowed")
                     </div>
                     <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
                         <input type="checkbox" style="width: 20px; height: 20px; accent-color: #000000; cursor: pointer;" />

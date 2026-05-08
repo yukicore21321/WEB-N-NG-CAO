@@ -5,6 +5,7 @@ namespace LibraryManagementSystem.Models
 {
     public class Book
     {
+        [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tiêu đề không được để trống")]
@@ -12,29 +13,34 @@ namespace LibraryManagementSystem.Models
         [Display(Name = "Tiêu đề")]
         public string Title { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Tác giả không được để trống")]
         [StringLength(100)]
         [Display(Name = "Tác giả")]
         public string Author { get; set; } = string.Empty;
 
+        [StringLength(100)]
+        [Display(Name = "Nhà xuất bản")]
+        public string? Publisher { get; set; }
+
+        [Display(Name = "Năm xuất bản")]
+        public int? PublishYear { get; set; }
+
         [Display(Name = "Mô tả")]
         public string? Description { get; set; }
 
-        [Display(Name = "ISBN")]
-        public string? ISBN { get; set; }
+        [Required]
+        [Display(Name = "Số lượng")]
+        public int Quantity { get; set; }
 
         [Required]
-        [Display(Name = "Tổng số bản")]
-        public int TotalCopies { get; set; }
+        [Display(Name = "Số lượng còn lại")]
+        public int AvailableQuantity { get; set; }
 
-        [Required]
-        [Display(Name = "Số bản hiện có")]
-        public int AvailableCopies { get; set; }
+        [Display(Name = "Ảnh bìa URL")]
+        public string? ImageUrl { get; set; }
 
-        [Display(Name = "Ảnh bìa")]
-        public string? ImagePath { get; set; }
-
-        [Display(Name = "File tài liệu số (PDF)")]
-        public string? FilePath { get; set; }
+        [Display(Name = "Ngày tạo")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]
         [Display(Name = "Thể loại")]
@@ -43,6 +49,6 @@ namespace LibraryManagementSystem.Models
         [ForeignKey("CategoryId")]
         public virtual Category? Category { get; set; }
 
-        public virtual ICollection<BorrowRecord>? BorrowRecords { get; set; }
+        public virtual ICollection<BorrowTicketDetail>? BorrowDetails { get; set; }
     }
 }

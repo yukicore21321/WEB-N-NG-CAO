@@ -56,10 +56,10 @@ namespace LibraryManagementSystem.Data
             {
                 var categories = new List<Category>
                 {
-                    new Category { Name = "Công nghệ thông tin" },
-                    new Category { Name = "Kinh tế" },
-                    new Category { Name = "Ngoại ngữ" },
-                    new Category { Name = "Kỹ năng sống" }
+                    new Category { Name = "Công nghệ thông tin", Description = "Sách về lập trình và phần cứng", CreatedAt = DateTime.Now },
+                    new Category { Name = "Kinh tế", Description = "Sách về tài chính và quản lý", CreatedAt = DateTime.Now },
+                    new Category { Name = "Ngoại ngữ", Description = "Sách học ngôn ngữ", CreatedAt = DateTime.Now },
+                    new Category { Name = "Kỹ năng sống", Description = "Sách phát triển bản thân", CreatedAt = DateTime.Now }
                 };
                 context.Categories.AddRange(categories);
                 context.SaveChanges();
@@ -76,32 +76,38 @@ namespace LibraryManagementSystem.Data
                     new Book { 
                         Title = "Lập trình C# nâng cao", 
                         Author = "Nguyễn Văn A", 
-                        ISBN = "123456789", 
-                        TotalCopies = 10, 
-                        AvailableCopies = 8, 
+                        Publisher = "NXB Giáo Dục",
+                        PublishYear = 2023,
+                        Quantity = 10, 
+                        AvailableQuantity = 8, 
                         CategoryId = itCategory.Id,
                         Description = "Cuốn sách hướng dẫn lập trình C# từ cơ bản đến nâng cao.",
-                        ImagePath = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        ImageUrl = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                        CreatedAt = DateTime.Now
                     },
                     new Book { 
                         Title = "ASP.NET Core 9.0 Masterclass", 
                         Author = "Trần Thị B", 
-                        ISBN = "987654321", 
-                        TotalCopies = 5, 
-                        AvailableCopies = 5, 
+                        Publisher = "NXB Trẻ",
+                        PublishYear = 2024,
+                        Quantity = 5, 
+                        AvailableQuantity = 5, 
                         CategoryId = itCategory.Id,
                         Description = "Xây dựng ứng dụng Web hiện đại với .NET 9.",
-                        ImagePath = "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        ImageUrl = "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                        CreatedAt = DateTime.Now
                     },
                     new Book { 
                         Title = "Đắc Nhân Tâm", 
                         Author = "Dale Carnegie", 
-                        ISBN = "111222333", 
-                        TotalCopies = 20, 
-                        AvailableCopies = 15, 
+                        Publisher = "NXB Tổng Hợp",
+                        PublishYear = 2022,
+                        Quantity = 20, 
+                        AvailableQuantity = 15, 
                         CategoryId = skillCategory.Id,
                         Description = "Cuốn sách bán chạy nhất mọi thời đại.",
-                        ImagePath = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        ImageUrl = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                        CreatedAt = DateTime.Now
                     }
                 };
                 context.Books.AddRange(books);
