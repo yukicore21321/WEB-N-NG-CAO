@@ -1,98 +1,150 @@
 @{
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "Category Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="space-y-6 animate-fade-in">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Quản lý Thể loại</h1>
-            <p class="text-slate-500">Quản lý các danh mục phân loại sách trong hệ thống.</p>
-        </div>
-        <button class="px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-blue-700 transition-all flex items-center space-x-2 shadow-lg shadow-primary/20">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+<style>
+    .admin-page-container {
+        position: absolute;
+        left: 20px;
+        top: 170px;
+        width: calc(100% - 40px);
+        height: calc(100vh - 210px);
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 30px;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    /* Tabs Container */
+    .tabs-container {
+        position: absolute;
+        left: 20px;
+        top: 102px;
+        display: flex;
+        gap: 0;
+    }
+
+    .tab-btn {
+        width: 244px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat';
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+    }
+
+    .tab-borrowed {
+        background: #E3E3E3;
+        color: #000000;
+        border-radius: 12px 0 0 12px;
+    }
+
+    .tab-overdue {
+        background: #E3E3E3;
+        color: #000000;
+        border-radius: 0 0 0 0;
+    }
+
+    .tab-categories {
+        background: #000000;
+        color: #FFFFFF;
+        border-radius: 0 12px 12px 0;
+    }
+
+    .btn-add {
+        background: #000000;
+        color: #FFFFFF;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: opacity 0.3s;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .admin-table th {
+        text-align: left;
+        padding: 15px 20px;
+        background: #F9F9F9;
+        font-weight: 600;
+        font-size: 14px;
+        color: #151619;
+        border-bottom: 1px solid #E8E8E8;
+    }
+
+    .admin-table td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #F5F5F5;
+        font-size: 14px;
+        color: #333;
+    }
+</style>
+
+<div class="tabs-container">
+    <a href="/Admin/BorrowRecords" class="tab-btn tab-borrowed">Borrowed Books</a>
+    <a href="#" class="tab-btn tab-overdue">Overdue Borrowers</a>
+    <a href="/Admin/Categories" class="tab-btn tab-categories">Book Categories</a>
+</div>
+
+<div class="admin-page-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="margin: 0; font-weight: 700; font-size: 24px;">Book Categories</h2>
+        <a href="#" class="btn-add">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Thêm thể loại mới</span>
-        </button>
+            Add New Category
+        </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Table Column -->
-        <div class="lg:col-span-2">
-            <div class="premium-card overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-slate-50/50">
+    <div style="height: calc(100% - 80px); overflow-y: auto;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>Books Count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string[] categories = { "Technology", "Science", "Education", "Literature", "History", "Art" };
+                    for (int i = 0; i < categories.Length; i++)
+                    {
                         <tr>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Tên thể loại</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Số lượng sách</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr class="hover:bg-slate-50/80 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-medium text-slate-400">#1</td>
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-slate-800">Công nghệ thông tin</span>
-                            </td>
-                            <td class="px-6 py-4 text-center text-sm text-slate-600">456 cuốn</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end space-x-2">
-                                    <button class="p-2 text-slate-400 hover:text-primary transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
+                            <td>#CAT-@((i + 1).ToString("D2"))</td>
+                            <td style="font-weight: 600;">@categories[i]</td>
+                            <td>@(25 + i * 5) Books</td>
+                            <td>
+                                <div style="display: flex; gap: 15px;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="cursor:pointer;">
+                                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89783 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="cursor:pointer;">
+                                        <path d="M3 6H21M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                                 </div>
                             </td>
                         </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors group">
-                            <td class="px-6 py-4 text-sm font-medium text-slate-400">#2</td>
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-slate-800">Kinh tế</span>
-                            </td>
-                            <td class="px-6 py-4 text-center text-sm text-slate-600">312 cuốn</td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end space-x-2">
-                                    <button class="p-2 text-slate-400 hover:text-primary transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Quick Add Form -->
-        <div class="lg:col-span-1">
-            <div class="premium-card p-6 space-y-6">
-                <h3 class="text-lg font-bold text-slate-800">Thêm nhanh</h3>
-                <div class="space-y-4">
-                    <div class="space-y-2">
-                        <label class="text-sm font-bold text-slate-700">Tên thể loại</label>
-                        <input type="text" placeholder="Ví dụ: Văn học nước ngoài" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-primary/10 transition-all">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-sm font-bold text-slate-700">Mô tả (tùy chọn)</label>
-                        <textarea rows="3" placeholder="Mô tả ngắn gọn về thể loại..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-primary/10 transition-all resize-none"></textarea>
-                    </div>
-                    <button class="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-primary/20">Thêm vào danh sách</button>
-                </div>
-            </div>
-        </div>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
 </div>

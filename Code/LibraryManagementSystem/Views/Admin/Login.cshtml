@@ -1,0 +1,226 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Library Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #F5F5F5;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .login-container {
+            position: relative;
+            width: 930px;
+            height: 575px;
+            background: #FFFFFF;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Left Side - Form */
+        .form-side {
+            flex: 1;
+            position: relative;
+            padding: 40px;
+        }
+
+        .welcome-text {
+            position: absolute;
+            width: 254px;
+            height: 42px;
+            left: 102px;
+            top: 133px;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: #000000;
+        }
+
+        .sub-text {
+            position: absolute;
+            width: 226px;
+            height: 17px;
+            left: 115px;
+            top: 203px;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 140%;
+            color: #000000;
+        }
+
+        .input-frame {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 8px;
+            position: absolute;
+            width: 267px;
+            height: 42px;
+            background: #FFFFFF;
+            border: 1px solid #3D3E3E;
+            border-radius: 12px;
+        }
+
+        .input-frame input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-family: 'Montserrat';
+            font-size: 13px;
+            color: #151619;
+        }
+
+        .input-frame input::placeholder {
+            color: #727374;
+        }
+
+        .forgot-pass {
+            position: absolute;
+            width: 119px;
+            height: 18px;
+            left: 96px;
+            top: 374px;
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 140%;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .btn-signin {
+            position: absolute;
+            width: 267px;
+            height: 42px;
+            left: 96px;
+            top: 420px;
+            background: #000000;
+            border-radius: 15px;
+            border: none;
+            color: #FFFFFF;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn-signin:hover {
+            opacity: 0.8;
+        }
+
+        /* Right Side - Black Decoration */
+        .decor-side {
+            position: absolute;
+            width: 469px;
+            height: 575px;
+            left: 461px;
+            top: 0px;
+            background: #000000;
+            border-radius: 40px 0px 0px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .logo-container {
+            position: absolute;
+            width: 264.38px;
+            height: 157.41px;
+            left: 103px;
+            top: 125px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-text {
+            position: absolute;
+            left: 25.37%;
+            right: 25.37%;
+            top: 62.61%;
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 140%;
+            text-align: center;
+        }
+
+        .btn-signup-small {
+            box-sizing: border-box;
+            position: absolute;
+            width: 185px;
+            height: 42px;
+            left: 142px;
+            top: 408px;
+            background: #000000;
+            border: 1px solid #FFFFFF;
+            border-radius: 15px;
+            color: #FFFFFF;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side -->
+        <div class="form-side">
+            <div class="welcome-text">Welcome Back !!</div>
+            <div class="sub-text">Please enter your credentials to log in</div>
+            
+            <form action="/Admin/Login" method="POST">
+                <div class="input-frame" style="left: 96px; top: 255px;">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                
+                <div class="input-frame" style="left: 95px; top: 316px;">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                
+                <a href="#" class="forgot-pass">Forgot password?</a>
+                
+                <button type="submit" class="btn-signin">SIGN IN</button>
+            </form>
+        </div>
+
+        <!-- Right Side -->
+        <div class="decor-side">
+            <div class="logo-container">
+                <!-- Sử dụng logo.svg với filter trắng -->
+                <img src="/images/logo.svg" alt="Logo" style="width: 120px; height: auto; filter: brightness(0) invert(1);">
+            </div>
+            
+            <div class="signup-text">New to our platform? Sign Up now.</div>
+            <a href="/Account/Register" class="btn-signup-small">SIGN UP</a>
+            
+            <!-- Graphics placeholder -->
+            <div style="position: absolute; bottom: 40px; width: 100%; text-align: center; opacity: 0.2; font-size: 80px; font-weight: 900; letter-spacing: 10px;">
+                ADMIN
+            </div>
+        </div>
+    </div>
+</body>
+</html>

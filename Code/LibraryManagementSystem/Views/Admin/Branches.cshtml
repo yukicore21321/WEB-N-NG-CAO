@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Branch Management";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -38,8 +38,8 @@
         gap: 15px;
     }
 
-    .btn-add-user {
-        width: 136px;
+    .btn-add-branch {
+        width: 149px;
         height: 44px;
         background: #000000;
         border-radius: 12px;
@@ -91,11 +91,11 @@
         text-align: center;
     }
 
-    /* Column spacing distribution for Users */
+    /* Column spacing distribution for Branches */
     .col-id { width: 8%; }
-    .col-name { width: 25%; }
-    .col-email { width: 32%; }
-    .col-username { width: 20%; }
+    .col-name { width: 30%; }
+    .col-contact { width: 22%; }
+    .col-location { width: 25%; }
     .col-action { width: 15%; }
 
     .admin-table td {
@@ -310,16 +310,16 @@
     }
 </style>
 
-<h1 class="page-title">User Management</h1>
+<h1 class="page-title">Branch Management</h1>
 
 <div class="header-actions">
-    <a href="javascript:void(0)" class="btn-add-user" onclick="openModal('add')">
+    <a href="#" class="btn-add-branch">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M8 12H16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 16V8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Add User
+        Add Branch
     </a>
 
     <div class="search-container">
@@ -338,21 +338,21 @@
                 <tr>
                     <th class="col-id">ID</th>
                     <th class="col-name">Name</th>
-                    <th class="col-email">Email</th>
-                    <th class="col-username">Username</th>
+                    <th class="col-contact">Contact No</th>
+                    <th class="col-location">Location</th>
                     <th class="col-action">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 1; i <= 10; i++)
+                @for (int i = 1; i <= 8; i++)
                 {
                     <tr>
                         <td>@i</td>
-                        <td style="text-align: left; padding-left: 20px;">Prabath Jayasuriya</td>
-                        <td style="text-align: left; padding-left: 20px;">prabathjaylk@gmail.com</td>
-                        <td>prabathjay</td>
+                        <td style="text-align: left; padding-left: 20px;">BookWorm Matara</td>
+                        <td>0412410984</td>
+                        <td>Matara</td>
                         <td>
-                             <div class="action-group">
+                            <div class="action-group">
                                 <!-- Edit -->
                                 <button class="action-btn" onclick="openModal('edit')">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -383,16 +383,17 @@
     </div>
 </div>
 
-<!-- User Modal (Add/Update) -->
-<div class="modal-overlay" id="userModal">
+<!-- Branch Modal (Add/Update) -->
+<div class="modal-overlay" id="branchModal">
     <div class="add-modal-content">
         <div class="modal-header-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="black" stroke-width="2"/>
-                <path d="M12 15C7.58172 15 4 18.5817 4 23V23H20V23C20 18.5817 16.4183 15 12 15Z" stroke="black" stroke-width="2"/>
+                <path d="M3 21H21" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 7L12 3L21 7V21H3V7Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 21V12H15V21" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-        <h2 class="modal-title" id="modalTitle">Add User</h2>
+        <h2 class="modal-title" id="modalTitle">Add Branch</h2>
         <button class="close-square" onclick="closeModal()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="24" height="24" rx="6" fill="white"/>
@@ -405,22 +406,17 @@
 
         <!-- Name -->
         <div class="input-field-container" style="width: 441px; height: 42px; left: 93px; top: 168px;">
-            <input type="text" class="modal-input" id="userName" placeholder="Name">
+            <input type="text" class="modal-input" id="branchName" placeholder="Name">
         </div>
 
-        <!-- Email -->
+        <!-- Contact No -->
         <div class="input-field-container" style="width: 441px; height: 42px; left: 93px; top: 235px;">
-            <input type="email" class="modal-input" id="userEmail" placeholder="Email">
+            <input type="text" class="modal-input" id="branchContact" placeholder="Contact No">
         </div>
 
-        <!-- Username -->
-        <div class="input-field-container" style="width: 213px; height: 42px; left: 93px; top: 302px;">
-            <input type="text" class="modal-input" id="userUsername" placeholder="Username">
-        </div>
-
-        <!-- Password -->
-        <div class="input-field-container" style="width: 213px; height: 42px; left: 321px; top: 302px;">
-            <input type="password" class="modal-input" id="userPassword" placeholder="Password">
+        <!-- Location -->
+        <div class="input-field-container" style="width: 441px; height: 42px; left: 93px; top: 302px;">
+            <input type="text" class="modal-input" id="branchLocation" placeholder="Location">
         </div>
 
         <button class="btn-cancel-popup" onclick="closeModal()">CANCEL</button>
@@ -428,10 +424,10 @@
     </div>
 </div>
 
-<!-- View User Modal -->
-<div class="modal-overlay" id="viewUserModal">
+<!-- View Branch Modal -->
+<div class="modal-overlay" id="viewBranchModal">
     <div class="add-modal-content">
-        <h2 class="modal-title" style="left: 124px; top: 64px;">View User</h2>
+        <h2 class="modal-title" style="left: 124px; top: 64px;">View Branch</h2>
         <button class="close-square" onclick="closeViewModal()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="24" height="24" rx="6" fill="white"/>
@@ -444,10 +440,10 @@
 
         <div class="view-frame-239">
             <div class="view-left-pane">
-                <div class="view-row"><span class="view-label">User ID : 1</span></div>
-                <div class="view-row"><span class="view-label">Name : Wimal Gurusinghe</span></div>
-                <div class="view-row"><span class="view-label">Email : wimalgsh@gamil.com</span></div>
-                <div class="view-row" style="border-bottom: none;"><span class="view-label">Username : wimalguru</span></div>
+                <div class="view-row"><span class="view-label">Branch ID : 1</span></div>
+                <div class="view-row"><span class="view-label">Name : BookWorm - Matara</span></div>
+                <div class="view-row"><span class="view-label">Contact No : 0412410984</span></div>
+                <div class="view-row" style="border-bottom: none;"><span class="view-label">Location : Matara</span></div>
             </div>
             <div class="view-divider-v"></div>
             <div class="view-right-pane">
@@ -464,7 +460,7 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal-overlay" id="deleteUserModal">
+<div class="modal-overlay" id="deleteBranchModal">
     <div class="add-modal-content" style="height: 400px;">
         <div class="modal-header-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -491,27 +487,25 @@
 </div>
 
 <script>
-    const modal = document.getElementById('userModal');
-    const viewModal = document.getElementById('viewUserModal');
-    const deleteModal = document.getElementById('deleteUserModal');
+    const modal = document.getElementById('branchModal');
+    const viewModal = document.getElementById('viewBranchModal');
+    const deleteModal = document.getElementById('deleteBranchModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
     function openModal(mode) {
         if (mode === 'add') {
-            modalTitle.innerText = 'Add User';
+            modalTitle.innerText = 'Add Branch';
             modalConfirmBtn.innerText = 'ADD';
-            document.getElementById('userName').value = '';
-            document.getElementById('userEmail').value = '';
-            document.getElementById('userUsername').value = '';
-            document.getElementById('userPassword').value = '';
+            document.getElementById('branchName').value = '';
+            document.getElementById('branchContact').value = '';
+            document.getElementById('branchLocation').value = '';
         } else {
-            modalTitle.innerText = 'Update User';
+            modalTitle.innerText = 'Update Branch';
             modalConfirmBtn.innerText = 'UPDATE';
-            document.getElementById('userName').value = 'Prabath Jayasuriya';
-            document.getElementById('userEmail').value = 'prabathjaylk@gmail.com';
-            document.getElementById('userUsername').value = 'prabathjay';
-            document.getElementById('userPassword').value = '********';
+            document.getElementById('branchName').value = 'BookWorm Matara';
+            document.getElementById('branchContact').value = '0412410984';
+            document.getElementById('branchLocation').value = 'Matara';
         }
         modal.style.display = 'flex';
     }

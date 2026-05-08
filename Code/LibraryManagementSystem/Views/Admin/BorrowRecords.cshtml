@@ -1,131 +1,445 @@
 @{
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "Borrow & Return Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="space-y-6 animate-fade-in">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Quản lý Mượn / Trả</h1>
-            <p class="text-slate-500">Theo dõi lịch sử và trạng thái mượn sách của người dùng.</p>
-        </div>
-        <button class="px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-blue-700 transition-all flex items-center space-x-2 shadow-lg shadow-primary/20">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            <span>Tạo phiếu mượn mới</span>
-        </button>
-    </div>
+<style>
+    .admin-page-container {
+        position: absolute;
+        left: 20px;
+        top: 170px;
+        width: calc(100% - 40px);
+        height: calc(100vh - 210px);
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 30px;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
 
-    <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="premium-card p-4 flex items-center space-x-4 border-l-4 border-l-blue-500">
-            <div class="p-2 bg-blue-50 text-blue-500 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-slate-500">Đang mượn</p>
-                <p class="text-lg font-bold text-slate-800">156</p>
-            </div>
-        </div>
-        <div class="premium-card p-4 flex items-center space-x-4 border-l-4 border-l-red-500">
-            <div class="p-2 bg-red-50 text-red-500 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-slate-500">Quá hạn</p>
-                <p class="text-lg font-bold text-slate-800">24</p>
-            </div>
-        </div>
-        <div class="premium-card p-4 flex items-center space-x-4 border-l-4 border-l-emerald-500">
-            <div class="p-2 bg-emerald-50 text-emerald-500 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-slate-500">Đã trả hôm nay</p>
-                <p class="text-lg font-bold text-slate-800">12</p>
-            </div>
-        </div>
-    </div>
+    /* Tabs Container */
+    .tabs-container {
+        position: absolute;
+        left: 20px;
+        top: 102px;
+        display: flex;
+        gap: 0;
+    }
 
-    <!-- Table -->
-    <div class="premium-card overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50/50">
+    .tab-btn {
+        width: 244px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat';
+        font-weight: 600;
+        font-size: 16px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        background: #E3E3E3;
+        color: #000000;
+        transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+        background: #000000 !important;
+        color: #FFFFFF !important;
+    }
+
+    .tab-borrowed {
+        border-radius: 12px 0 0 12px;
+    }
+
+    .tab-overdue {
+        border-radius: 0 12px 12px 0;
+    }
+
+    /* Search Bar */
+    .search-container {
+        position: absolute;
+        right: 20px;
+        top: 98px;
+        width: 300px;
+        height: 46px;
+        background: #FFFFFF;
+        border: 1px solid #E8E8E8;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 16px;
+    }
+
+    .search-input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-family: 'Montserrat';
+        font-size: 16px;
+        color: #727374;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Montserrat';
+        table-layout: fixed; /* Ensures fixed column widths work correctly */
+    }
+
+    .admin-table th {
+        padding: 15px 10px;
+        font-weight: 500;
+        font-size: 16px;
+        color: #000000;
+        border-bottom: 1px solid #000000;
+        text-align: center;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .view-modal-content {
+        position: relative;
+        width: 1139px;
+        height: 729px;
+        background: #FFFFFF;
+        border: 1px solid #E8E8E8;
+        border-radius: 12px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .view-modal-inner-frame {
+        position: absolute;
+        width: 1087px;
+        height: 558px;
+        left: 26px;
+        top: 25px;
+        background: #FFFFFF;
+        border: 1px solid #E8E8E8;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .inner-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .inner-table th {
+        height: 58px;
+        border-bottom: 1px solid #E8E8E8;
+        font-family: 'Montserrat';
+        font-weight: 500;
+        font-size: 16px;
+        color: #151619;
+        text-align: center;
+    }
+
+    .inner-table td {
+        height: 68px;
+        font-family: 'Montserrat';
+        font-weight: 400;
+        font-size: 16px;
+        color: #151619;
+        text-align: center;
+    }
+
+    .summary-box {
+        position: absolute;
+        width: 408px;
+        height: 115px;
+        left: 26px;
+        top: 600px;
+        border: 1px solid #E8E8E8;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+    }
+
+    .summary-id-section {
+        width: 103px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-right: 1.5px solid #000000;
+    }
+
+    .summary-details {
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .summary-row.overdue .summary-value {
+        color: #DC2626;
+        font-weight: 700;
+    }
+
+    .btn-close-view {
+        position: absolute;
+        width: 259px;
+        height: 54px;
+        left: 824px;
+        top: 600px;
+        background: #000000;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-family: 'Montserrat';
+        font-weight: 700;
+        font-size: 16px;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Column spacing distribution to match Figma */
+    .col-id { width: 8%; }
+    .col-userid { width: 15%; }
+    .col-amount { width: 15%; }
+    .col-due { width: 20%; }
+    .col-datetime { width: 32%; }
+    .col-action { width: 10%; }
+
+    .admin-table td {
+        padding: 20px 10px;
+        text-align: center;
+        font-size: 16px;
+        color: #151619;
+        font-weight: 500;
+    }
+
+    .action-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #000000;
+        padding: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .table-section {
+        display: none;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .table-section.active {
+        display: block;
+    }
+</style>
+
+<div class="tabs-container">
+    <div class="tab-btn tab-borrowed active" onclick="switchTab('borrowed', this)">Borrowed Books</div>
+    <div class="tab-btn tab-overdue" onclick="switchTab('overdue', this)">Overdue Borrowers</div>
+</div>
+
+<div class="search-container">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#292D32" stroke-width="1.5"/>
+        <path d="M21 21L16.65 16.65" stroke="#292D32" stroke-width="1.5" stroke-opacity="0.4" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" placeholder="Search by ID">
+</div>
+
+<div class="admin-page-container">
+    <!-- Borrowed Books Section -->
+    <div id="borrowed-section" class="table-section active">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th class="col-id">ID</th>
+                    <th class="col-userid">User ID</th>
+                    <th class="col-amount">Amount</th>
+                    <th class="col-due">Due Date</th>
+                    <th class="col-datetime">Date & Time</th>
+                    <th class="col-action">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 10; i++)
+                {
                     <tr>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Người mượn</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Sách</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Ngày mượn</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Hạn trả</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Trạng thái</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
+                        <td>001</td>
+                        <td>001</td>
+                        <td>002 Books</td>
+                        <td>13 - 03 - 2024</td>
+                        <td>25-02-2024 10:39:43</td>
+                        <td>
+                            <div class="action-group">
+                                <button class="action-btn" onclick="openViewModal()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8.5 4.97L8.72 3.66C8.88 2.39 9 1.5 11.26 1.5H12.74C15 1.5 15.13 2.43 15.28 3.67L15.5 4.97" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M18.85 9.14001L18.2 19.21C18.11 20.78 18 22 15.21 22H8.79002C6.00002 22 5.89002 20.78 5.80002 19.21L5.15002 9.14001" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M10.33 16.5H13.66" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9.5 12.5H14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Overdue Borrowers Section -->
+    <div id="overdue-section" class="table-section">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th class="col-id">ID</th>
+                    <th class="col-userid">User ID</th>
+                    <th class="col-amount">Amount</th>
+                    <th class="col-due">Due Date</th>
+                    <th class="col-datetime">Date & Time</th>
+                    <th class="col-action">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <tr>
+                        <td style="color: #DC2626; font-weight: 700;">OD-@i.ToString("D3")</td>
+                        <td>U-@((100 + i).ToString())</td>
+                        <td>001 Books</td>
+                        <td style="color: #DC2626;">01 - 01 - 2024</td>
+                        <td>15-01-2024 09:15:00</td>
+                        <td>
+                            <div class="action-group">
+                                <button class="action-btn" onclick="openViewModal(true)">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8.5 4.97L8.72 3.66C8.88 2.39 9 1.5 11.26 1.5H12.74C15 1.5 15.13 2.43 15.28 3.67L15.5 4.97" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M18.85 9.14001L18.2 19.21C18.11 20.78 18 22 15.21 22H8.79002C6.00002 22 5.89002 20.78 5.80002 19.21L5.15002 9.14001" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M10.33 16.5H13.66" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9.5 12.5H14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Borrowed Books View Modal -->
+<div class="modal-overlay" id="viewBorrowedBooksModal">
+    <div class="view-modal-content">
+        <div class="view-modal-inner-frame">
+            <table class="inner-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Book ID</th>
+                        <th style="width: 40%;">Name</th>
+                        <th style="width: 20%;">Type</th>
+                        <th style="width: 20%;">Language</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">NV</div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800">Nguyễn Văn A</p>
-                                    <p class="text-[10px] text-slate-500">ID: USER-123</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-medium text-slate-800 line-clamp-1">Lập trình C# cơ bản</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-slate-600">01/05/2024</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-slate-600 font-medium">15/05/2024</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold">Đang mượn</span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="px-3 py-1.5 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg hover:bg-emerald-500 hover:text-white transition-all">
-                                Nhận trả sách
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">TB</div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800">Trần Thị B</p>
-                                    <p class="text-[10px] text-slate-500">ID: USER-456</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-medium text-slate-800 line-clamp-1">Kinh tế vĩ mô 2024</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-slate-600">20/04/2024</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm text-red-500 font-bold">04/05/2024</p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-bold">Quá hạn 2 ngày</span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="px-3 py-1.5 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg hover:bg-emerald-500 hover:text-white transition-all">
-                                Nhận trả sách
-                            </button>
-                        </td>
-                    </tr>
+                <tbody>
+                    @for (int i = 1; i <= 7; i++)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td style="text-align: left; padding-left: 100px;">Hibernate - Core</td>
+                            <td>Educational</td>
+                            <td>English</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
+
+        <div class="summary-box">
+            <div class="summary-id-section">
+                <span style="font-size: 25px; font-weight: 600;">ID</span>
+                <span style="font-size: 30px; font-weight: 400;">4</span>
+            </div>
+            <div class="summary-details">
+                <div class="summary-row">
+                    <span style="font-size: 19px; font-weight: 600;">Total Books :</span>
+                    <span style="font-size: 20px; font-weight: 400;">04 Books</span>
+                </div>
+                <div class="summary-row" id="modal-due-row">
+                    <span style="font-size: 19px; font-weight: 600;">Due Date :</span>
+                    <span class="summary-value" style="font-size: 20px; font-weight: 400;">13 - 12 - 2024</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-close-view" onclick="closeViewModal()">CLOSE</button>
     </div>
 </div>
+
+<script>
+    function switchTab(type, element) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+        document.querySelectorAll('.table-section').forEach(section => section.classList.remove('active'));
+        document.getElementById(type + '-section').classList.add('active');
+    }
+
+    const viewModal = document.getElementById('viewBorrowedBooksModal');
+    const modalDueRow = document.getElementById('modal-due-row');
+
+    function openViewModal(isOverdue = false) {
+        if (isOverdue) {
+            modalDueRow.classList.add('overdue');
+        } else {
+            modalDueRow.classList.remove('overdue');
+        }
+        viewModal.style.display = 'flex';
+    }
+
+    function closeViewModal() {
+        viewModal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == viewModal) {
+            closeViewModal();
+        }
+    }
+</script>

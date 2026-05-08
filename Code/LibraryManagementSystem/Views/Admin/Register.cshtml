@@ -1,0 +1,204 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration - Library Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #F5F5F5;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 930px;
+            height: 575px;
+            background: #FFFFFF;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Left Side - Black */
+        .decor-side {
+            position: absolute;
+            width: 469px;
+            height: 575px;
+            left: 0px;
+            top: 0px;
+            background: #000000;
+            border-radius: 0px 40px 40px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .signin-text {
+            position: absolute;
+            left: 25.16%;
+            right: 24.52%;
+            top: 62.61%;
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 140%;
+            text-align: center;
+        }
+
+        .btn-signin-small {
+            box-sizing: border-box;
+            position: absolute;
+            width: 185px;
+            height: 42px;
+            left: 142px;
+            top: 408px;
+            background: #000000;
+            border: 1px solid #FFFFFF;
+            border-radius: 15px;
+            color: #FFFFFF;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        /* Right Side - Form */
+        .form-side {
+            flex: 1;
+            margin-left: 469px;
+            position: relative;
+            padding: 40px;
+        }
+
+        .title {
+            position: absolute;
+            width: 121px;
+            height: 42px;
+            left: 135px;
+            top: 78px;
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 140%;
+            color: #000000;
+        }
+
+        .instruction {
+            position: absolute;
+            width: 258px;
+            height: 17px;
+            left: 102px;
+            top: 162px;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 140%;
+            color: #000000;
+        }
+
+        .input-frame {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 8px;
+            position: absolute;
+            background: #FFFFFF;
+            border: 1px solid #3D3E3E;
+            border-radius: 12px;
+        }
+
+        .input-frame input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-family: 'Montserrat';
+            font-size: 13px;
+            color: #151619;
+        }
+
+        .btn-signup {
+            position: absolute;
+            width: 267px;
+            height: 42px;
+            left: 105px;
+            top: 438px;
+            background: #000000;
+            border-radius: 15px;
+            border: none;
+            color: #FFFFFF;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn-signup:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Side - Black -->
+        <div class="decor-side">
+            <img src="/images/logo.svg" alt="Logo" style="width: 120px; height: auto; filter: brightness(0) invert(1); margin-top: -100px;">
+            
+            <div class="signin-text">Already have Account? Sign In now.</div>
+            <a href="/Admin/Login" class="btn-signin-small">SIGN IN</a>
+        </div>
+
+        <!-- Right Side - White -->
+        <div class="form-side">
+            <div class="title">Sign Up</div>
+            <div class="instruction">Please provide your information to sign up.</div>
+            
+            <form action="/Admin/Login" method="GET">
+                <!-- Row 1 -->
+                <div class="input-frame" style="width: 195px; height: 42px; left: 33px; top: 218px;">
+                    <input type="text" placeholder="First Name" required>
+                </div>
+                <div class="input-frame" style="width: 195px; height: 42px; left: 244px; top: 218px;">
+                    <input type="text" placeholder="Last Name" required>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="input-frame" style="width: 170px; height: 42px; left: 33px; top: 284px;">
+                    <input type="text" placeholder="Contact No" required>
+                </div>
+                <div class="input-frame" style="width: 220px; height: 42px; left: 219px; top: 284px;">
+                    <input type="email" placeholder="Email" required>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="input-frame" style="width: 195px; height: 42px; left: 33px; top: 350px;">
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-frame" style="width: 195px; height: 42px; left: 244px; top: 350px;">
+                    <input type="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn-signup">SIGN UP</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

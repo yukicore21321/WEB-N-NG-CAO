@@ -1,65 +1,144 @@
 @model IEnumerable<LibraryManagementSystem.Models.Book>
 
 @{
-    ViewData["Title"] = "Tủ sách số";
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Library Lane Books";
 }
 
-<div class="bg-gray-50 min-h-screen py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-            <div>
-                <h1 class="text-3xl font-extrabold text-gray-900 font-display">Tủ sách số</h1>
-                <p class="mt-2 text-gray-500">Khám phá toàn bộ kho tài liệu của chúng tôi.</p>
-            </div>
-            <div class="mt-4 md:mt-0 flex space-x-3">
-                <div class="relative">
-                    <input type="text" placeholder="Tìm kiếm sách..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
-            </div>
+<div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+    <!-- Black Vertical Bar on the Right -->
+    <div style="position: absolute; width: 93px; height: 100%; right: 0; top: 0; background: #000000; display: flex; flex-direction: column; align-items: center; padding-top: 150px; z-index: 10;">
+        <div style="font-family: 'Montserrat'; font-style: normal; font-weight: 900; font-size: 24px; line-height: 150%; color: #FFFFFF; text-transform: uppercase; writing-mode: vertical-rl; letter-spacing: 1em;">
+            BOOKWORM
+        </div>
+    </div>
+
+    <!-- Library Lane Books Title -->
+    <div style="position: absolute; width: 350px; height: 35px; left: 33px; top: 25px; font-family: 'Montserrat'; font-style: normal; font-weight: 600; font-size: 25px; line-height: 140%; color: #000000;">
+        Library Lane Books
+    </div>
+
+    <!-- Btn Acquire Books -->
+    <div style="display: flex; flex-direction: row; align-items: center; padding: 10px 20px; gap: 10px; position: absolute; width: auto; height: 44px; right: 420px; top: 19px; background: #000000; border-radius: 12px; cursor: pointer; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="toggleBorrowPopup(true)">
+        <!-- add-circle icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 12H16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 16V8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span style="font-family: 'Montserrat'; font-style: normal; font-weight: 400; font-size: 14px; color: #FFFFFF;">Acquire</span>
+    </div>
+
+    <!-- Search Box -->
+    <div style="display: flex; flex-direction: row; align-items: center; padding: 10px 16px; gap: 12px; position: absolute; width: 280px; height: 44px; right: 120px; top: 19px; background: #FFFFFF; border: 1px solid #E8E8E8; border-radius: 12px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 22L20 20" stroke="#292D32" stroke-width="1.5" stroke-opacity="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <input type="text" placeholder="Search by ID or Type" style="width: 100%; border: none; outline: none; font-family: 'Montserrat'; font-size: 14px; color: #727374;">
+    </div>
+
+    <!-- Main Table Container -->
+    <div style="position: absolute; width: calc(100% - 130px); height: calc(100% - 100px); left: 20px; top: 85px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); overflow: hidden;">
+        <!-- Table Header -->
+        <div style="position: relative; height: 82px; border-bottom: 2px solid #EEEEEE; padding: 0 25px; display: flex; align-items: center; background: #FDFDFD;">
+            <div style="flex: 0 0 100px; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">ID</div>
+            <div style="flex: 0 0 350px; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">Name</div>
+            <div style="flex: 0 0 250px; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">Type</div>
+            <div style="flex: 0 0 200px; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">Language</div>
+            <div style="flex: 0 0 300px; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">Availability</div>
+            <div style="flex: 1; font-family: 'Montserrat'; font-weight: 600; font-size: 14px; color: #000000; text-align: center;">Add to Cart</div>
         </div>
 
-        @if (!Model.Any())
-        {
-            <div class="bg-white rounded-3xl p-12 text-center border border-dashed border-gray-300">
-                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
-                    📚
-                </div>
-                <h3 class="text-lg font-medium text-gray-900">Chưa có sách nào</h3>
-                <p class="mt-1 text-gray-500 text-sm">Hệ thống đang được cập nhật dữ liệu. Vui lòng quay lại sau!</p>
-            </div>
-        }
-        else
-        {
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                @foreach (var item in Model)
-                {
-                    <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
-                        <div class="aspect-[2/3] relative overflow-hidden">
-                            <img src="@(string.IsNullOrEmpty(item.ImagePath) ? "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" : item.ImagePath)" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="@item.Title">
-                            <div class="absolute top-2 right-2 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-[10px] font-bold text-primary uppercase shadow-sm">
-                                @(item.FilePath != null ? "Sách số" : "Sách giấy")
-                            </div>
-                        </div>
-                        <div class="p-4 flex flex-grow flex-col">
-                            <p class="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">@item.Category?.Name</p>
-                            <h3 class="text-gray-900 font-bold text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors cursor-pointer">@item.Title</h3>
-                            <p class="text-gray-500 text-xs mb-4">Tác giả: @item.Author</p>
-                            <div class="mt-auto flex items-center justify-between">
-                                <span class="text-primary font-bold text-xs">Còn @item.AvailableCopies bản</span>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="p-2 bg-gray-50 rounded-lg text-gray-400 hover:bg-primary hover:text-white transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
+        <!-- Scrollable Table Body -->
+        <div style="height: calc(100% - 82px); overflow-y: auto;">
+            @foreach (var book in Model)
+            {
+                <div style="height: 68px; border-bottom: 1px solid #EEEEEE; display: flex; align-items: center; padding: 0 25px; transition: background 0.2s;" onmouseover="this.style.background='#F9F9F9'" onmouseout="this.style.background='transparent'">
+                    <div style="flex: 0 0 100px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center;">@book.Id</div>
+                    <div style="flex: 0 0 350px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@book.Title">@book.Title</div>
+                    <div style="flex: 0 0 250px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center;">@(book.Category?.Name ?? "Educational")</div>
+                    <div style="flex: 0 0 200px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: #151619; text-align: center;">English</div>
+                    <div style="flex: 0 0 300px; font-family: 'Montserrat'; font-weight: 400; font-size: 14px; color: @(book.AvailableCopies > 0 ? "#151619" : "#E53935"); text-align: center;">
+                        @(book.AvailableCopies > 0 ? "Available" : "Borrowed")
                     </div>
-                }
-            </div>
-        }
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: #000000; cursor: pointer;" />
+                    </div>
+                </div>
+            }
+        </div>
     </div>
+
+    <!-- Borrow Confirmation PopUp -->
+    <div id="borrowPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="position: relative; width: 1140px; height: 750px; background: #FFFFFF; border-radius: 20px; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); padding: 25px;">
+            <div style="font-family: 'Montserrat'; font-weight: 700; font-size: 20px; margin-bottom: 20px;">Review Borrow List</div>
+
+            <!-- Frame 92 (Main List) -->
+            <div style="box-sizing: border-box; width: 1087px; height: 500px; background: #FFFFFF; border: 1px solid #E8E8E8; border-radius: 12px; position: relative; overflow: hidden;">
+                <!-- Header -->
+                <div style="display: flex; align-items: center; height: 58px; border-bottom: 1px solid #E8E8E8; background: #FDFDFD; padding: 0 24px;">
+                    <div style="width: 150px; font-family: 'Montserrat'; font-weight: 500; font-size: 16px; color: #151619; padding-left: 26px;">Book ID</div>
+                    <div style="width: 250px; font-family: 'Montserrat'; font-weight: 500; font-size: 16px; color: #151619; padding-left: 36px;">Name</div>
+                    <div style="width: 200px; font-family: 'Montserrat'; font-weight: 500; font-size: 16px; color: #151619; padding-left: 46px;">Type</div>
+                    <div style="width: 200px; font-family: 'Montserrat'; font-weight: 500; font-size: 16px; color: #151619; padding-left: 51px;">Language</div>
+                    <div style="flex: 1; font-family: 'Montserrat'; font-weight: 500; font-size: 16px; color: #151619; text-align: center;">Action</div>
+                </div>
+
+                <!-- List Content -->
+                <div style="height: calc(100% - 58px); overflow-y: auto;">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div style="display: flex; align-items: center; height: 68px; border-bottom: 1px solid #F5F5F5; padding: 0 24px;">
+                            <div style="width: 150px; font-family: 'Montserrat'; font-size: 16px; padding-left: 32px;">1</div>
+                            <div style="width: 250px; font-family: 'Montserrat'; font-size: 16px; padding-left: 36px;">Hibernate - Core</div>
+                            <div style="width: 200px; font-family: 'Montserrat'; font-size: 16px; padding-left: 46px;">Educational</div>
+                            <div style="width: 200px; font-family: 'Montserrat'; font-size: 16px; padding-left: 51px;">English</div>
+                            <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                                <div style="width: 24px; height: 24px; cursor: pointer;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="#151619" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8.5 4.97L8.72 3.66C8.88 2.39 9 1.5 11.26 1.5H12.74C15 1.5 15.13 2.43 15.28 3.67L15.5 4.97" stroke="#151619" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M18.85 9.14001L18.2 19.21C18.11 20.78 18 22 15.21 22H8.79002C6.00002 22 5.89002 20.78 5.80002 19.21L5.15002 9.14001" stroke="#151619" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M10.33 16.5H13.66" stroke="#151619" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M9.5 12.5H14.5" stroke="#151619" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Frame 240 (Summary) -->
+            <div style="box-sizing: border-box; position: absolute; width: 408px; height: 115px; left: 26px; top: 600px; border: 1px solid #E8E8E8; border-radius: 12px; display: flex; align-items: center;">
+                <div style="width: 100px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <div style="font-family: 'Montserrat'; font-weight: 600; font-size: 25px; color: #151619;">ID</div>
+                    <div style="font-family: 'Montserrat'; font-weight: 400; font-size: 30px; color: #151619;">4</div>
+                    <div style="position: absolute; right: 0; width: 2px; height: 80px; background: #000000;"></div>
+                </div>
+                <div style="flex: 1; padding-left: 20px;">
+                    <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+                        <span style="font-family: 'Montserrat'; font-weight: 600; font-size: 19px; color: #151619;">Total Books :</span>
+                        <span style="font-family: 'Montserrat'; font-weight: 400; font-size: 20px; color: #151619;">04 Books</span>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <span style="font-family: 'Montserrat'; font-weight: 600; font-size: 19px; color: #151619;">Due Date :</span>
+                        <span style="font-family: 'Montserrat'; font-weight: 400; font-size: 20px; color: #151619;">13 - 12 - 2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <button onclick="toggleBorrowPopup(false)" style="position: absolute; width: 259px; height: 54px; left: 538px; top: 628px; background: #D7D7D7; border-radius: 10px; border: none; font-family: 'Montserrat'; font-weight: 700; font-size: 16px; color: #000000; cursor: pointer;">CANCEL</button>
+            <button style="position: absolute; width: 259px; height: 54px; left: 825px; top: 628px; background: #000000; border-radius: 10px; border: none; font-family: 'Montserrat'; font-weight: 700; font-size: 16px; color: #FFFFFF; cursor: pointer;">CONFIRM</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleBorrowPopup(show) {
+            document.getElementById('borrowPopup').style.display = show ? 'flex' : 'none';
+        }
+    </script>
 </div>

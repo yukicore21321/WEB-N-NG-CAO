@@ -45,9 +45,45 @@ namespace LibraryManagementSystem.Controllers
             return View();
         }
 
+        public IActionResult Branches()
+        {
+            ViewData["Title"] = "Quản lý Chi nhánh";
+            return View();
+        }
+
         public IActionResult CreateBook()
         {
             ViewData["Title"] = "Thêm sách mới";
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult OTP()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
             return View();
         }
     }

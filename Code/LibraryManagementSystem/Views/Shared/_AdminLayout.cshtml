@@ -1,134 +1,480 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Admin LibraryPro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - BookWorm Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: #F2F2F2;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Sidebar - Frame 201 */
+        .sidebar {
+            position: fixed;
+            width: 222px;
+            height: 100vh;
+            left: 0px;
+            top: 0px;
+            background: #000000;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            position: absolute;
+            width: 142px;
+            left: 40px;
+            top: 33px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            position: absolute;
+            width: 222px;
+            height: 48px;
+            left: 0px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            background: #000000;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background: #FFFFFF;
+        }
+
+        .nav-icon {
+            position: absolute;
+            left: 40px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+        }
+
+        .nav-btn.active .nav-icon {
+            color: #000000;
+        }
+
+        .nav-btn span {
+            position: absolute;
+            left: 85px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+
+        .nav-btn.active span {
+            color: #000000;
+        }
+
+        /* Header - Frame 208 */
+        .header {
+            position: fixed;
+            width: calc(100% - 222px);
+            height: 71px;
+            left: 222px;
+            top: 0px;
+            background: #FFFFFF;
+            z-index: 50;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        /* Profile Section */
+        .profile-avatar {
+            position: absolute;
+            left: 20px;
+            top: 19px;
+            width: 34px;
+            height: 34px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-name {
+            position: absolute;
+            left: 61px;
+            top: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #000;
+            margin: 0;
+        }
+
+        .profile-role {
+            position: absolute;
+            left: 61px;
+            top: 38px;
+            font-weight: 600;
+            font-size: 12px;
+            color: #000;
+            margin: 0;
+        }
+
+        /* Right Header Elements */
+        .clock-container {
+            position: absolute;
+            right: 140px;
+            top: 15px;
+            text-align: right;
+        }
+
+        .clock-time {
+            font-weight: 700;
+            font-size: 16px;
+            color: #000;
+            margin: 0;
+        }
+
+        .clock-date {
+            font-weight: 500;
+            font-size: 13px;
+            color: #000;
+            margin: 0;
+        }
+
+        .header-line {
+            position: absolute;
+            width: 2px;
+            height: 58px;
+            right: 110px;
+            top: 7px;
+            background: #000000;
+        }
+
+        .settings-gear {
+            position: absolute;
+            width: 71px;
+            height: 71px;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-left: 1px solid #E8E8E8;
+        }
+
+        .main-content {
+            position: absolute;
+            left: 222px;
+            top: 71px;
+            width: calc(100% - 222px);
+            height: calc(100vh - 71px);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 627px;
+            height: 514px;
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header-icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            left: 48px;
+            top: 48px;
+            background: #D7D7D7;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            position: absolute;
+            left: 124px;
+            top: 64px;
+            font-family: 'Montserrat';
+            font-weight: 600;
+            font-size: 20px;
+            color: #151619;
+            margin: 0;
+        }
+
+        .modal-line {
+            position: absolute;
+            width: 531px;
+            height: 0px;
+            left: 48px;
+            top: 128px;
+            border: 1px solid #000000;
+        }
+
+        .input-group {
+            position: absolute;
+            left: 84px;
+            display: flex;
+            align-items: center;
+            gap: 21px;
+        }
+
+        .input-label {
+            width: 155px;
+            font-family: 'Montserrat';
+            font-size: 13px;
+            font-weight: 400;
+            color: #3D3E3E;
+        }
+
+        .input-field-container {
+            width: 278px;
+            height: 42px;
+            background: #FFFFFF;
+            border: 1px solid #3D3E3E;
+            border-radius: 12px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .modal-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-family: 'Montserrat';
+            font-size: 13px;
+            color: #727374;
+        }
+
+        .btn-cancel-popup {
+            position: absolute;
+            width: 259px;
+            height: 54px;
+            left: 48px;
+            top: 412px;
+            background: #D7D7D7;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 16px;
+            color: #000000;
+        }
+
+        .btn-confirm-popup {
+            position: absolute;
+            width: 259px;
+            height: 54px;
+            left: 320px;
+            top: 412px;
+            background: #000000;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat';
+            font-weight: 700;
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/images/Group.png" alt="Logo" style="width: 100%; height: auto;" />
+        </div>
+
+        <!-- Dashboard -->
+        <a href="/Admin/Index" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" style="top: 158px;">
+            <div class="nav-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="7" height="7" rx="1" fill="currentColor"/>
+                    <rect x="13" y="4" width="7" height="7" rx="1" fill="currentColor"/>
+                    <rect x="4" y="13" width="7" height="7" rx="1" fill="currentColor"/>
+                    <rect x="13" y="13" width="7" height="7" rx="1" fill="currentColor"/>
+                </svg>
+            </div>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- Catalog (Using Compass/Explore icon from User side) -->
+        <a href="/Admin/BorrowRecords" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" || ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowRecords" ? "active" : "")" style="top: 226px;">
+            <div class="nav-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
+                    <path d="M12 7V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 15V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <span>Catalog</span>
+        </a>
+
+        <!-- Books -->
+        <a href="/Admin/Books" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Books" ? "active" : "")" style="top: 294px;">
+            <div class="nav-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19.5V4.5C4 3.39543 4.89543 2.5 6 2.5H18C19.1046 2.5 20 3.39543 20 4.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 2.5V21.5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+            <span>Books</span>
+        </a>
+
+        <!-- Users -->
+        <a href="/Admin/Users" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")" style="top: 362px;">
+            <div class="nav-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <span>Users</span>
+        </a>
+
+        <!-- Branches -->
+        <a href="/Admin/Branches" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Branches" ? "active" : "")" style="top: 430px;">
+            <div class="nav-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+            </div>
+            <span>Branches</span>
+        </a>
+
+        <!-- Log Out -->
+        <form asp-controller="Admin" asp-action="Login" method="get">
+            <button type="submit" class="nav-btn" style="top: 931px; border: none; cursor: pointer; width: 100%;">
+                <div class="nav-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 16L21 12M21 12L17 8M21 12H9M13 16V17C13 18.6569 11.6569 20 10 20H5C3.34315 20 2 18.6569 2 17V7C2 5.34315 3.34315 4 5 4H10C11.6569 4 13 5.34315 13 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span>Log Out</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="header">
+        <div class="profile-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </div>
+        <p class="profile-name">Nisal Gunasekara</p>
+        <p class="profile-role">Admin</p>
+
+        <div class="clock-container">
+            <p class="clock-time">12:29 PM</p>
+            <p class="clock-date">Sep 02, 2023</p>
+        </div>
+        
+        <div class="header-line"></div>
+        
+        <div class="settings-gear">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <!-- Change Credentials Modal -->
+    <div class="modal-overlay" id="changeCredentialsModal">
+        <div class="modal-content">
+            <div class="modal-header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="black" stroke-width="2"/>
+                    <path d="M12 18V12" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="12" cy="8" r="1" fill="black"/>
+                </svg>
+            </div>
+            <h2 class="modal-title">Change Credentials</h2>
+            <div class="modal-line"></div>
+
+            <!-- Current Password -->
+            <div class="input-group" style="top: 167px;">
+                <span class="input-label">Current Password</span>
+                <div class="input-field-container">
+                    <input type="password" class="modal-input" placeholder="Enter Current Password">
+                </div>
+            </div>
+
+            <!-- New Password -->
+            <div class="input-group" style="top: 243px;">
+                <span class="input-label">New Password</span>
+                <div class="input-field-container">
+                    <input type="password" class="modal-input" placeholder="Enter New Password">
+                </div>
+            </div>
+
+            <!-- Confirm New Password -->
+            <div class="input-group" style="top: 319px;">
+                <span class="input-label">Confirm New Password</span>
+                <div class="input-field-container">
+                    <input type="password" class="modal-input" placeholder="Confirm New Password">
+                </div>
+            </div>
+
+            <button class="btn-cancel-popup" onclick="closeModal()">CANCEL</button>
+            <button class="btn-confirm-popup">CONFIRM</button>
+        </div>
+    </div>
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e40af',
-                        secondary: '#6366f1',
-                        accent: '#f59e0b',
-                        dark: '#0f172a'
-                    }
-                }
+        const modal = document.getElementById('changeCredentialsModal');
+        const gear = document.querySelector('.settings-gear');
+
+        gear.onclick = function() {
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
             }
         }
     </script>
-</head>
-<body class="bg-[#f8fafc] text-slate-900 font-sans antialiased">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out shadow-sm flex flex-col">
-            <div class="p-6 flex items-center space-x-3">
-                <img src="~/images/logo.svg" class="w-10 h-10" alt="Admin Logo" />
-                <span class="font-display text-xl font-bold tracking-tight text-slate-800">Library<span class="text-primary">Admin</span></span>
-            </div>
-
-            <nav class="flex-grow px-4 pb-4 space-y-1 overflow-y-auto">
-                <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Tổng quan</div>
-                <a asp-controller="Admin" asp-action="Index" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "text-slate-600")">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1  1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="px-3 py-2 mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider">Quản lý</div>
-                <a asp-controller="Admin" asp-action="Books" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Books" ? "active" : "")">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span>Quản lý Sách</span>
-                </a>
-                <a asp-controller="Admin" asp-action="BorrowRecords" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowRecords" ? "active" : "")">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                    <span>Mượn / Trả</span>
-                </a>
-                <a asp-controller="Admin" asp-action="Categories" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" ? "active" : "")">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                    </svg>
-                    <span>Thể loại</span>
-                </a>
-                <a asp-controller="Admin" asp-action="Users" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    <span>Người dùng</span>
-                </a>
-
-                <div class="px-3 py-2 mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider">Khác</div>
-                <a href="/" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                    <span>Xem giao diện User</span>
-                </a>
-            </nav>
-
-            <div class="p-4 border-t border-slate-100">
-                <div class="flex items-center space-x-3 px-3 py-2">
-                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold">A</div>
-                    <div class="flex-grow overflow-hidden">
-                        <p class="text-sm font-semibold text-slate-800 truncate">Administrator</p>
-                        <p class="text-xs text-slate-500 truncate">admin@librarypro.com</p>
-                    </div>
-                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
-                         <button type="submit" class="text-slate-400 hover:text-red-500 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-grow overflow-y-auto">
-            <!-- Topbar -->
-            <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <button class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                    <h2 class="text-lg font-bold text-slate-800 font-display">@ViewData["Title"]</h2>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="relative hidden sm:block">
-                        <input type="text" placeholder="Tìm nhanh..." class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-64 outline-none transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                    <button class="p-2 text-slate-400 hover:text-slate-600 relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <div class="p-6">
-                @RenderBody()
-            </div>
-        </main>
-    </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
