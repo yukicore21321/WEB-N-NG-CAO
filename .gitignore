@@ -57,3 +57,5 @@ TestResult.xml
 nunit-*.xml
 
 Code/py/
+git_push.bat
+
