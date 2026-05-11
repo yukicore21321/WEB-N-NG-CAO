@@ -1,0 +1,356 @@
+@model List<LibraryManagementSystem.Models.Category>
+
+    @{
+    ViewData["Title"] = "Category Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    <style>
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .add-modal-content {
+            position: relative;
+            width: 620px;
+            height: 490px;
+            background: #F5F5F5;
+            border-radius: 12px;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .modal-header-icon {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            left: 40px;
+            top: 35px;
+            background: #E3E3E3;
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            position: absolute;
+            left: 95px;
+            top: 42px;
+
+            font-family: 'Montserrat';
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-square {
+            position: absolute;
+            top: 42px;
+            right: 40px;
+
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .modal-line {
+            position: absolute;
+            left: 40px;
+            top: 95px;
+
+            width: calc(100% - 80px);
+            height: 1px;
+            background: #A8A8A8;
+        }
+
+        .input-field-container {
+            position: absolute;
+        }
+
+        .modal-input {
+
+            width: 100%;
+
+            height: 100%;
+
+            border-radius: 12px;
+
+            background: white;
+
+            padding: 0 18px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            box-sizing: border-box;
+
+            color: black;
+        }
+
+        .btn-cancel-popup {
+            position: absolute;
+
+            height: 54px;
+
+            left: 40px;
+            bottom: 70px;
+
+            background: #D9D9D9;
+
+            border: none;
+            border-radius: 10px;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+            margin-bottom: 100px;
+        }
+
+        .btn-confirm-popup {
+            position: absolute;
+
+            height: 54px;
+
+            right: 40px;
+            bottom: 70px;
+
+            background: black;
+            color: white;
+
+            border: none;
+            border-radius: 10px;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+    </style>
+    <div class="container-fluid mt-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2>Quản lý thể loại</h2>
+
+            <button class="btn btn-dark" onclick="openModal()">
+                Thêm thể loại
+            </button>
+        </div>
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>ID</th>
+                    <th>Tên thể loại</th>
+                    <th>Mô tả</th>
+                    <th width="150">Hành động</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model != null && Model.Any())
+                {
+                @foreach (var item in Model)
+                {
+                <tr>
+
+                    <td>@item.Id</td>
+
+                    <td>@item.Name</td>
+
+                    <td>
+                        @(string.IsNullOrEmpty(item.Description)
+                        ? ""
+                        : item.Description)
+                    </td>
+
+                    <td>
+                        <div class="d-flex gap-2">
+
+                            <!-- EDIT -->
+                            <button class="btn btn-sm" onclick="openEditModal(
+                                            @item.Id,
+                                            '@item.Name',
+                                            '@item.Description'
+                                        )">
+
+                                <img src="~/images/edit-icon.png" width="32" height="32" fill="none" alt="Close Icon" class="w-3 h-3" />
+
+
+                            </button>
+
+                            <!-- DELETE -->
+                            <form asp-area="Admin"
+                                asp-controller="Categories"
+                                asp-action="Delete"
+                                asp-route-id="@item.Id"
+                                method="post"
+                                onsubmit="return confirm('Bạn có chắc muốn xoá danh mục này?');">
+
+                                <button type="submit" class="btn  btn-sm">
+                                     <img src="~/images/trash-icon.png" width="32" height="32" fill="none" alt="Close Icon" class="w-3 h-3" />
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+                }
+                }
+                else
+                {
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No categories found
+
+                    </td>
+
+                </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- MODAL -->
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="categoryModal">
+
+        <div class="add-modal-content">
+
+            <!-- ICON -->
+            <div class="modal-header-icon">
+                <img src="~/images/category-icon.png" width="32" height="32" fill="none" alt="Category Icon"
+                    class="w-3 h-3" />
+            </div>
+
+            <!-- TITLE -->
+            <h2 class="modal-title" id="modalTitle">
+                Thêm thể loại
+            </h2>
+
+            <!-- CLOSE -->
+            <button class="close-square" onclick="closeModalCategory()">
+                <img src="~/images/close-icon.png" width="32" height="32" fill="none" alt="Close Icon"
+                    class="w-3 h-3" />
+            </button>
+
+            <!-- LINE -->
+            <div class="modal-line"></div>
+
+            <!-- FORM -->
+            <form id="categoryForm" method="post"               asp-action="Create"> 
+
+                <input type="hidden" id="categoryId" name="Id" />
+
+                <!-- CATEGORY NAME -->
+                <div class="input-field-container" style="
+                    width: 441px;
+                    height: 42px;
+                    left: 93px;
+                    top: 180px;
+                 ">
+
+                    <input type="text" class="modal-input" id="categoryName" name="Name" placeholder="Nhập tên thể loại"
+                        required>
+
+                </div>
+
+                <div class="input-field-container" style="
+                    width: 441px;
+                    height: 42px;
+                    left: 93px;
+                    top: 250px;
+                 ">
+
+                    <input type="text" class="modal-input" id="categoryDescription" name="Description"
+                        placeholder="Nhập thông tin mô tả">
+
+                </div>
+
+                <!-- BUTTON -->
+                <button type="button" class="btn-cancel-popup" onclick="closeModalCategory()">
+
+                    Huỷ
+
+                </button>
+
+                <button type="submit" class="btn-confirm-popup" id="saveBtn">
+
+                    LƯU
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const modalCategory =
+            document.getElementById("categoryModal");
+
+        const openModal = () => {
+
+            document.getElementById("modalTitle").innerText =
+                "Thêm thể loại";
+
+            document.getElementById("categoryForm").action =
+                "/Admin/Categories/Create";
+
+            document.getElementById("categoryId").value = "";
+
+            document.getElementById("categoryName").value = "";
+
+            document.getElementById("categoryDescription").value = "";
+
+            modalCategory.style.display = "flex";
+        }
+
+        function openEditModal(id, name, description) {
+
+            document.getElementById("modalTitle").innerText =
+                "Cập nhật thể loại";
+
+            document.getElementById("categoryForm").action =
+                "/Admin/Categories/Edit";
+
+            document.getElementById("categoryId").value = id;
+
+            document.getElementById("categoryName").value =
+                name;
+
+            document.getElementById("categoryDescription").value =
+                description;
+
+            modalCategory.style.display = "flex";
+        }
+
+        const closeModalCategory = () => {
+            modalCategory.style.display = "none";
+        }
+
+    </script>
