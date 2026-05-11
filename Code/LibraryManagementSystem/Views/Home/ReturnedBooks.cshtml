@@ -1,3 +1,4 @@
+@model IEnumerable<LibraryManagementSystem.Models.BorrowRecord>
 @{
     Layout = "_UserLayout";
     ViewData["Title"] = "Returned Books";
@@ -45,16 +46,16 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < 5; i++)
+                @foreach (var record in Model)
                 {
                     <tr style="border-bottom: 1px solid #EEEEEE; transition: background 0.3s;" onmouseover="this.style.background='#F5F5F5'" onmouseout="this.style.background='white'">
-                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">1</td>
-                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">1</td>
-                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">002 Books</td>
-                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">15 - 03 - 2024</td>
-                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">25-02-2024 10:39:43</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">@record.Id</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">@record.UserId</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">001 Books</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">@record.ReturnDate?.ToString("dd - MM - yyyy")</td>
+                        <td style="padding: 20px 30px; font-size: 16px; color: #151619;">@record.BorrowDate.ToString("dd-MM-yyyy HH:mm:ss")</td>
                         <td style="padding: 20px 30px;">
-                            <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">Returned</span>
+                            <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 14px;">@record.Status</span>
                         </td>
                     </tr>
                 }

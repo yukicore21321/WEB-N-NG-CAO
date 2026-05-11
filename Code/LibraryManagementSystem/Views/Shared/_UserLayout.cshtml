@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Identity
+@using LibraryManagementSystem.Models
+@inject UserManager<ApplicationUser> UserManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,6 +203,21 @@
             </div>
         </a>
 
+        <!-- User Management (User Plus Icon) -->
+        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+        {
+            <a asp-controller="Account" asp-action="Register" class="sidebar-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Register" ? "active-btn" : "inactive-btn")" style="top: 362px;">
+                <div class="btn-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M20 8V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17 11H23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
+        }
+
         <!-- Exit Button -->
         <form asp-controller="Account" asp-action="Logout" method="post">
             <button type="submit" class="sidebar-btn inactive-btn" style="top: 931px;">
@@ -222,8 +240,14 @@
                 <path d="M12.13 60.42H87.88C87.88 60.42 85 93.75 50 93.75C15 93.75 12.13 60.42 12.13 60.42Z" fill="#000000"/>
             </svg>
         </div>
-        <div style="position: absolute; left: 61px; top: 16px; font-weight: 600; font-size: 16px; color: #000000;">Nisal Gunasekara</div>
-        <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">User</div>
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var fullName = currentUser?.FullName ?? "User";
+    var roles = await UserManager.GetRolesAsync(currentUser!);
+    var roleName = roles.FirstOrDefault() ?? "Guest";
+}
+        <div style="position: absolute; left: 61px; top: 16px; font-weight: 600; font-size: 16px; color: #000000;">@fullName</div>
+        <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">@roleName</div>
 
         <!-- Right Side Section -->
         <div style="position: absolute; left: 1681px; top: 15px; font-weight: 700; font-size: 16px; color: #000000;">12:29 PM</div>

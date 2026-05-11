@@ -8,17 +8,20 @@ namespace LibraryManagementSystem.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            // Create database if it doesn't exist
-            context.Database.EnsureCreated();
+            // Apply any pending migrations
+            context.Database.Migrate();
 
             // Seed Roles
-            if (!await roleManager.RoleExistsAsync("Admin"))
+            if (roleManager != null)
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
-            if (!await roleManager.RoleExistsAsync("User"))
-            {
-                await roleManager.CreateAsync(new IdentityRole("User"));
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                {
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+                if (!await roleManager.RoleExistsAsync("User"))
+                {
+                    await roleManager.CreateAsync(new IdentityRole("User"));
+                }
             }
 
             // Seed Admin User
@@ -113,6 +116,25 @@ namespace LibraryManagementSystem.Data
                 context.Books.AddRange(books);
                 context.SaveChanges();
             }
+
+            // Ensure every user has at least one BorrowRecord for testing
+            var users = await userManager.Users.ToListAsync();
+            var book = context.Books.First();
+            foreach (var user in users)
+            {
+                if (!context.BorrowRecords.Any(r => r.UserId == user.Id))
+                {
+                    context.BorrowRecords.Add(new BorrowRecord
+                    {
+                        UserId = user.Id,
+                        BookId = book.Id,
+                        BorrowDate = DateTime.Now.AddDays(-7),
+                        DueDate = DateTime.Now.AddDays(7),
+                        Status = BorrowStatus.Borrowed
+                    });
+                }
+            }
+            context.SaveChanges();
         }
     }
 }

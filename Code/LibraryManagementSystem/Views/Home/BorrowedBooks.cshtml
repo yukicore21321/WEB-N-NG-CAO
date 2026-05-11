@@ -1,3 +1,4 @@
+@model IEnumerable<LibraryManagementSystem.Models.BorrowRecord>
 @{
     Layout = "_UserLayout";
     ViewData["Title"] = "Borrowed Books";
@@ -44,14 +45,14 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < 12; i++)
+                @foreach (var record in Model)
                 {
                     <tr style="height: 68px; border-bottom: 1px solid #EEEEEE; transition: background 0.2s;" onmouseover="this.style.background='#F9F9F9'" onmouseout="this.style.background='white'">
-                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">1</td>
-                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">1</td>
-                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">002 Books</td>
-                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">13 - 03 - 2024</td>
-                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">25-02-2024 10:39:43</td>
+                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">@record.Id</td>
+                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">@record.UserId</td>
+                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">001 Books</td>
+                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">@record.DueDate.ToString("dd - MM - yyyy")</td>
+                        <td style="font-family: 'Montserrat'; font-size: 14px; color: #151619;">@record.BorrowDate.ToString("dd-MM-yyyy HH:mm:ss")</td>
                         <td style="display: flex; align-items: center; justify-content: center; height: 68px;">
                             <button style="display: flex; align-items: center; gap: 8px; background: #000000; color: #FFFFFF; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat'; font-weight: 600; font-size: 12px; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" onclick="toggleReturnPopup(true)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

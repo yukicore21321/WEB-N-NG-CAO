@@ -17,6 +17,7 @@ namespace LibraryManagementSystem.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<BorrowTicket> BorrowTickets { get; set; }
         public DbSet<BorrowTicketDetail> BorrowTicketDetails { get; set; }
+        public DbSet<BorrowRecord> BorrowRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

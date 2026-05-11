@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -10,30 +13,62 @@ namespace LibraryManagementSystem.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _logger = logger;
+        _context = context;
+        _userManager = userManager;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return RedirectToAction("Login", "Account");
+
+        ViewBag.TotalBorrowed = await _context.BorrowRecords
+            .CountAsync(r => r.UserId == userId && r.Status == BorrowStatus.Borrowed);
+        
+        ViewBag.TotalReturned = await _context.BorrowRecords
+            .CountAsync(r => r.UserId == userId && r.Status == BorrowStatus.Returned);
+
         return View();
     }
 
-    public IActionResult UserDashboard()
+    public async Task<IActionResult> UserDashboard()
     {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return RedirectToAction("Login", "Account");
+
+        ViewBag.TotalBorrowed = await _context.BorrowRecords
+            .CountAsync(r => r.UserId == userId && r.Status == BorrowStatus.Borrowed);
+        
+        ViewBag.TotalReturned = await _context.BorrowRecords
+            .CountAsync(r => r.UserId == userId && r.Status == BorrowStatus.Returned);
+
         return View();
     }
 
-    public IActionResult BorrowedBooks()
+    public async Task<IActionResult> BorrowedBooks()
     {
-        return View();
+        var userId = _userManager.GetUserId(User);
+        var records = await _context.BorrowRecords
+            .Include(r => r.Book)
+            .Where(r => r.UserId == userId && r.Status == BorrowStatus.Borrowed)
+            .ToListAsync();
+        return View(records);
     }
 
-    public IActionResult ReturnedBooks()
+    public async Task<IActionResult> ReturnedBooks()
     {
-        return View();
+        var userId = _userManager.GetUserId(User);
+        var records = await _context.BorrowRecords
+            .Include(r => r.Book)
+            .Where(r => r.UserId == userId && r.Status == BorrowStatus.Returned)
+            .ToListAsync();
+        return View(records);
     }
 
     [AllowAnonymous]

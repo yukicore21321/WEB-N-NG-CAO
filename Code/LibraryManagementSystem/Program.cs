@@ -2,6 +2,7 @@ using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LibraryManagementSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 builder.Services.AddMemoryCache(); // Caching requirement
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(); // Required for Identity UI if used
 

@@ -10,6 +10,9 @@ namespace LibraryManagementSystem.Models
         [Display(Name = "Họ và tên")]
         public string FullName { get; set; } = string.Empty;
 
+        public bool MustChangePassword { get; set; } = false;
+        public DateTime? LastPasswordChange { get; set; }
+
         public virtual ICollection<BorrowRecord>? BorrowRecords { get; set; }
     }
 }

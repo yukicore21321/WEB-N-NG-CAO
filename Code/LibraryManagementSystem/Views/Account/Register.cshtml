@@ -1,62 +1,52 @@
 @{
-    Layout = null;
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Thêm người dùng mới";
 }
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đăng ký - LibraryPro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <style>
-        /* Special handling for side-by-side inputs on register */
-        .register-input-username {
-            left: calc(50% - 100px) !important;
-            transform: translateX(-50%) !important;
-            width: 180px !important;
-        }
-        .register-input-password {
-            left: calc(50% + 100px) !important;
-            transform: translateX(-50%) !important;
-            width: 180px !important;
-        }
-    </style>
-</head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center font-montserrat">
-    <div class="login-container">
-        <!-- Left Side: Black Section -->
-        <div class="forgot-black-section">
-            <div class="forgot-left-logo">
-                <img src="~/images/logo2.svg" class="w-full h-full object-contain" alt="LibraryPro Logo" />
-            </div>
-            
-            <p class="forgot-left-text" style="top: 60%">
-                Already have Account? Sign In now.
-            </p>
+<div class="p-8 max-w-2xl mx-auto bg-white rounded-xl shadow-sm mt-10">
+    <h1 class="text-3xl font-bold mb-2">Thêm người dùng mới</h1>
+    <p class="text-gray-500 mb-8">Nhân viên có thể tạo tài khoản cho khách. Admin có thể tạo tài khoản cho nhân viên.</p>
 
-            <a asp-action="Login" class="btn-signin-small-register">SIGN IN</a>
+    @if (ViewBag.Error != null)
+    {
+        <div class="bg-red-50 text-red-500 p-4 rounded-lg mb-6 border border-red-100">
+            @ViewBag.Error
+        </div>
+    }
+
+    <form asp-action="Register" method="post" class="space-y-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+            <input type="text" name="name" placeholder="Ví dụ: Nguyễn Văn A" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all" required>
         </div>
 
-        <!-- Right Side: Register Form -->
-        <div class="forgot-right-section">
-            <div class="forgot-right-logo" style="top: 15px; left: 85%">
-                <img src="~/images/logo3.svg" class="w-full h-full object-contain" alt="Logo" />
-            </div>
-
-            <h1 class="register-title">Sign Up</h1>
-            <p class="register-desc">Please provide your information to sign up.</p>
-
-            <form asp-action="Register" method="post">
-                <input type="text" name="name" placeholder="Name" class="input-frame register-input-name" required>
-                <input type="email" name="email" placeholder="Email" class="input-frame register-input-email" required>
-                <input type="text" name="username" placeholder="Username" class="input-frame register-input-username" required>
-                <input type="password" name="password" placeholder="Password" class="input-frame register-input-password" required>
-                
-                <button type="submit" class="btn-register">SIGN UP</button>
-            </form>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" name="email" placeholder="email@example.com" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all" required>
         </div>
-    </div>
-</body>
-</html>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
+            <input type="text" name="username" placeholder="Username" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all" required>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+            <select name="role" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all">
+                <option value="User">Khách hàng (Customer)</option>
+                @if (User.IsInRole("Admin"))
+                {
+                    <option value="Staff">Nhân viên (Staff)</option>
+                    <option value="Admin">Quản trị viên (Admin)</option>
+                }
+            </select>
+        </div>
+
+        <div class="pt-4">
+            <button type="submit" class="w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-gray-800 transition-all uppercase tracking-wider">
+                Tạo tài khoản
+            </button>
+            <p class="text-xs text-center text-gray-400 mt-4 italic">Mật khẩu mặc định sẽ được đặt là "Temp@123". Hệ thống sẽ yêu cầu đổi mật khẩu khi đăng nhập lần đầu (đối với nhân viên).</p>
+        </div>
+    </form>
+</div>
