@@ -1,0 +1,558 @@
+@model List<LibraryManagementSystem.Models.Customer>
+
+@{
+    ViewData["Title"] = "Quản lý khách hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .add-modal-content {
+        position: relative;
+        width: 1020px;
+        height: 580px;
+        background: #F5F5F5;
+        border-radius: 12px;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    .modal-header-icon {
+        position: absolute;
+        width: 42px;
+        height: 42px;
+        left: 40px;
+        top: 35px;
+        background: #E3E3E3;
+        border-radius: 8px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-title {
+        position: absolute;
+        left: 95px;
+        top: 42px;
+
+        font-family: 'Montserrat';
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .close-square {
+        position: absolute;
+        top: 42px;
+        right: 40px;
+
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .modal-line {
+        position: absolute;
+        left: 40px;
+        top: 95px;
+
+        width: calc(100% - 80px);
+        height: 1px;
+        background: #A8A8A8;
+    }
+
+    .input-field-container {
+        position: absolute;
+    }
+
+    .modal-input {
+
+        width: 100%;
+
+        height: 100%;
+
+        border-radius: 12px;
+
+        background: white;
+
+        padding: 0 18px;
+
+        font-size: 15px;
+
+        outline: none;
+
+        box-sizing: border-box;
+
+        color: black;
+    }
+
+    .btn-cancel-popup-customer {
+        height: 54px;
+        width: 48%;
+        background: #D9D9D9;
+
+        border: none;
+        border-radius: 10px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .btn-confirm-popup-customer {
+        height: 54px;
+        width: 48%;
+        background: black;
+        color: white;
+
+        border: none;
+        border-radius: 10px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .btn-cancel-container {
+        position: absolute;
+        left: 100px;
+        right: 100px;
+        top: 480px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .upload-wrapper {
+
+        position: absolute;
+
+        top: 180px;
+        right: 93px;
+
+        display: flex;
+        gap: 20px;
+    }
+
+    .image-preview-box {
+
+        width: 180px;
+        height: 180px;
+
+        border-radius: 16px;
+
+        overflow: hidden;
+
+        background: #F3F3F3;
+
+        border: 1px solid #E1E1E1;
+        text-align: center;
+    }
+
+    .image-preview-box img {
+
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .upload-box {
+
+        width: 180px;
+        height: 180px;
+
+        border: 2px dashed #B8B8B8;
+        border-radius: 16px;
+
+        background: white;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        gap: 12px;
+
+        cursor: pointer;
+
+        transition: 0.2s;
+    }
+
+    .upload-box:hover {
+
+        border-color: black;
+
+        background: #FAFAFA;
+    }
+
+    .upload-box span {
+
+        font-size: 15px;
+        font-weight: 600;
+
+        color: #444;
+    }
+</style>
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Quản lý khách hàng</h2>
+
+        <button class="btn btn-dark" onclick="openModal()">
+            Thêm khách hàng
+        </button>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+                <th>ID</th>
+
+                <th>Họ tên</th>
+
+                <th>Số điện thoại</th>
+
+                <th>Email</th>
+
+                <th>Giới tính</th>
+
+                <th>Ngày sinh</th>
+                <th width="150">Hành động</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @if (Model != null && Model.Any())
+
+            {
+
+                @foreach (var item in Model)
+
+                {
+
+                    <tr>
+
+                        <td>@item.Id</td>
+
+                        <td>@item.FullName</td>
+
+                        <td>@item.Phone</td>
+
+                        <td>@item.Email</td>
+
+                        <td>@item.Gender</td>
+
+                        <td>
+
+                            @(item.DateOfBirth?.ToString("dd/MM/yyyy"))
+
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <!-- EDIT -->
+
+                                <button class="btn btn-sm" onclick="openEditModal(
+
+                                    @item.Id,
+
+                                    '@item.FullName',
+
+                                    '@item.Phone',
+
+                                    '@item.Email',
+
+                                    '@item.Address',
+
+                                    '@item.Gender',
+
+                                    '@(item.DateOfBirth?.ToString("yyyy-MM-dd"))'
+
+                                    )">
+
+                                  <img src="~/images/edit-icon.png" width="32" height="32" fill="none" alt="Close Icon"
+                                         class="w-3 h-3" />
+
+
+                                </button>
+
+                                  <!-- DELETE -->
+                                <form asp-area="Admin" asp-controller="Customer" asp-action="Delete" asp-route-id="@item.Id"
+                                      method="post" onsubmit="return confirm('Bạn có chắc muốn xoá khách hàng này?');">
+
+                                    <button type="submit" class="btn  btn-sm">
+                                        <img src="~/images/trash-icon.png" width="32" height="32" fill="none" alt="Close Icon"
+                                             class="w-3 h-3" />
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- MODAL -->
+<!-- Customer Modal -->
+<div class="modal-overlay" id="modalCustomer">
+
+    <div class="add-modal-content">
+
+        <!-- ICON -->
+        <div class="modal-header-icon">
+            <img src="~/images/customer-icon.png" width="32" height="32" fill="none" alt="Customer Icon"
+                 class="w-3 h-3" />
+        </div>
+
+        <!-- TITLE -->
+        <h2 class="modal-title" id="modalTitle">
+            Thêm khách hàng
+        </h2>
+
+        <!-- CLOSE -->
+        <button class="close-square" onclick="closeModalCustomer()">
+            <img src="~/images/close-icon.png" width="32" height="32" fill="none" alt="Close Icon" class="w-3 h-3" />
+        </button>
+
+        <!-- LINE -->
+        <div class="modal-line"></div>
+
+        <!-- FORM -->
+        <form id="formCustomer" method="post" enctype="multipart/form-data" asp-action="Create">
+
+            <input type="hidden" id="customerId" name="Id" />
+
+            <div>
+                <div class="input-field-container" style="
+                    width: 400px;
+                    height: 42px;
+                    left: 93px;
+                    top: 180px;
+                    ">
+
+                    <input type="text" class="modal-input" id="customerName" name="FullName"
+                           placeholder="Nhập tên khách hàng" required>
+
+                </div>
+
+                <div class="input-field-container" style="
+                    width: 400px;
+                    height: 42px;
+                    left: 93px;
+                    top: 250px;
+                    ">
+
+                    <input type="text" class="modal-input" id="customerPhone" name="Phone"
+                           placeholder="Nhập số điện thoại" required>
+
+                </div>
+                <div class="input-field-container" style="
+                    width: 400px;
+                    height: 42px;
+                    left: 93px;
+                    top: 320px;
+                    ">
+
+                    <input type="text" class="modal-input" id="customerEmail" name="Email" placeholder="Nhập email"
+                           required>
+
+                </div>
+
+               
+            </div>
+            <div>
+                <div class="input-field-container" style="
+                    width: 400px;
+                    height: 42px;
+                    right: 93px;
+                    top: 250px;
+                    ">
+
+                    <select class="modal-input" id="customerGender" name="Gender">
+
+                        <option value="">-- Chọn giới tính --</option>
+
+                        <option value="Nam">Nam</option>
+
+                        <option value="Nữ">Nữ</option>
+
+                    </select>
+                </div>
+                <div class="input-field-container" style="
+                    width: 400px;
+                    height: 42px;
+                    right: 93px;
+                    top: 320px;
+                    ">
+
+                    <input type="date" class="modal-input" id="customerDateOfBirth" name="DateOfBirth">
+                </div>
+            </div>
+             <div class="input-field-container" style="
+                    width: 836px;
+                    height: 42px;
+                    left: 93px;
+
+                    top: 390px;
+                    ">
+
+                    <input type="text" class="modal-input" id="customerAddress" name="Address"
+                           placeholder="Nhập địa chỉ" required>
+                </div>
+            <!-- BUTTON -->
+            <div class="btn-cancel-container">
+                <button type="button" class="btn-cancel-popup-customer" onclick="closeModalCustomer()">
+
+                    Huỷ
+
+                </button>
+
+                <button type="submit" class="btn-confirm-popup-customer" id="saveBtn">
+
+                    LƯU
+
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<script>
+
+    // =========================
+    // MODAL
+    // =========================
+
+    const customerModal =
+        document.getElementById("modalCustomer");
+
+    const customerForm =
+        document.getElementById("formCustomer");
+
+    // =========================
+    // OPEN CREATE MODAL
+    // =========================
+
+    function openModal() {
+
+        // TITLE
+        document.getElementById("modalTitle")
+            .innerText = "Thêm khách hàng";
+
+        // FORM ACTION
+        customerForm.action =
+            "/Admin/Customer/Create";
+
+        // RESET VALUE
+        document.getElementById("customerId").value = "";
+
+        document.getElementById("customerName").value = "";
+
+        document.getElementById("customerPhone").value = "";
+
+        document.getElementById("customerEmail").value = "";
+
+        document.getElementById("customerAddress").value = "";
+
+        document.getElementById("customerGender").value = "";
+
+        document.getElementById("customerDateOfBirth").value = "";
+
+        // SHOW MODAL
+        customerModal.style.display = "flex";
+    }
+
+    // =========================
+    // OPEN EDIT MODAL
+    // =========================
+
+    function openEditModal(
+        id,
+        fullName,
+        phone,
+        email,
+        address,
+        gender,
+        dateOfBirth
+    ) {
+
+        // TITLE
+        document.getElementById("modalTitle")
+            .innerText = "Cập nhật khách hàng";
+
+        // FORM ACTION
+        customerForm.action =
+            "/Admin/Customer/Edit";
+
+        // SET VALUE
+        document.getElementById("customerId").value =
+            id;
+
+        document.getElementById("customerName").value =
+            fullName;
+
+        document.getElementById("customerPhone").value =
+            phone;
+
+        document.getElementById("customerEmail").value =
+            email;
+
+        document.getElementById("customerAddress").value =
+            address;
+
+        document.getElementById("customerGender").value =
+            gender;
+
+        document.getElementById("customerDateOfBirth").value =
+            dateOfBirth;
+
+        // SHOW MODAL
+        customerModal.style.display = "flex";
+    }
+
+    // =========================
+    // CLOSE MODAL
+    // =========================
+
+    function closeModalCustomer() {
+
+        customerModal.style.display = "none";
+    }
+
+
+</script>

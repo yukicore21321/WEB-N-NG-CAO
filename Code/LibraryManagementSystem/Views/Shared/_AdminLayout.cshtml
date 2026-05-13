@@ -329,31 +329,26 @@
         </a>
 
         <!-- Catalog (Using Compass/Explore icon from User side) -->
-        <a href="/Admin/BorrowRecords" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" || ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowRecords" ? "active" : "")" style="top: 226px;">
+        <a href="/Admin/Categories" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Categories" || ViewContext.RouteData.Values["Action"]?.ToString() == "BorrowRecords" ? "active" : "")" style="top: 226px;">
             <div class="nav-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
-                    <path d="M12 7V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M12 15V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#ffffff" d="m12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5" fill="#ffffff"/><path fill="#ffffff" d="M3 13.5h8v8H3z"/></svg>
             </div>
-            <span>Catalog</span>
+            <span>Thể loại</span>
         </a>
 
         <!-- Books -->
-        <a href="/Admin/Books" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Books" ? "active" : "")" style="top: 294px;">
+        <a href="/Admin/Book" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Books" ? "active" : "")" style="top: 294px;">
             <div class="nav-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 19.5V4.5C4 3.39543 4.89543 2.5 6 2.5H18C19.1046 2.5 20 3.39543 20 4.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5Z" stroke="currentColor" stroke-width="2"/>
                     <path d="M12 2.5V21.5" stroke="currentColor" stroke-width="2"/>
                 </svg>
             </div>
-            <span>Books</span>
+            <span>Sách</span>
         </a>
 
         <!-- Users -->
-        <a href="/Admin/Users" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")" style="top: 362px;">
+        <a href="/Admin/Customer" class="nav-btn @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")" style="top: 362px;">
             <div class="nav-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -362,7 +357,7 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
             </div>
-            <span>Users</span>
+            <span>Khách hàng</span>
         </a>
 
         <!-- Branches -->
