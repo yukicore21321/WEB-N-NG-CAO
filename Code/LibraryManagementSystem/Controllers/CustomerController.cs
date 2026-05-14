@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Services;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -14,16 +15,19 @@ namespace LibraryManagementSystem.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService;
         private readonly IMemoryCache _cache;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public CustomerController(
             ApplicationDbContext context,
             IEmailService emailService,
-            IMemoryCache cache
+            IMemoryCache cache,
+            UserManager<ApplicationUser> userManager
         )
         {
             _context = context;
             _emailService = emailService;
             _cache = cache;
+            _userManager = userManager;
         }
 
         // =========================
@@ -70,6 +74,23 @@ namespace LibraryManagementSystem.Controllers
             customer.CreatedAt = DateTime.Now;
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
+
+            // TỰ ĐỘNG TẠO TÀI KHOẢN ĐĂNG NHẬP
+            var user = new ApplicationUser
+            {
+                UserName = customer.Email,
+                Email = customer.Email,
+                FullName = customer.FullName,
+                PhoneNumber = customer.Phone,
+                EmailConfirmed = true,
+                MustChangePassword = true // Bắt đổi pass lần đầu
+            };
+
+            var result = await _userManager.CreateAsync(user, "Temp@123");
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+            }
 
             // Xóa OTP sau khi dùng xong
             _cache.Remove($"OTP_{customer.Email}");
