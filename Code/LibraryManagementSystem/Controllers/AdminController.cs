@@ -128,6 +128,11 @@ namespace LibraryManagementSystem.Controllers
                 }
                 await _userManager.AddToRoleAsync(user, role);
 
+                // Gửi OTP xác thực tài khoản mới
+                var otp = new Random().Next(100000, 999999).ToString();
+                _cache.Set($"OTP_{email}", otp, TimeSpan.FromMinutes(10));
+                await _emailService.SendEmailAsync(email, "Mã xác thực tài khoản mới", otp, user.FullName);
+
                 // Nếu là Staff hoặc Admin, tạo bản ghi bên bảng Employee để làm việc
                 if (role == "Staff" || role == "Admin")
                 {

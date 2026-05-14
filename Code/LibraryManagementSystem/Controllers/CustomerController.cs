@@ -3,6 +3,8 @@ using LibraryManagementSystem.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using LibraryManagementSystem.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -10,12 +12,18 @@ namespace LibraryManagementSystem.Controllers
     public class CustomerController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IMemoryCache _cache;
 
         public CustomerController(
-            ApplicationDbContext context
+            ApplicationDbContext context,
+            IEmailService emailService,
+            IMemoryCache cache
         )
         {
             _context = context;
+            _emailService = emailService;
+            _cache = cache;
         }
 
         // =========================
@@ -47,8 +55,16 @@ namespace LibraryManagementSystem.Controllers
             customer.CreatedAt = DateTime.Now;
 
             _context.Customers.Add(customer);
-
             await _context.SaveChangesAsync();
+
+            // Gửi mail thông báo cho khách hàng mới (nếu có email)
+            if (!string.IsNullOrEmpty(customer.Email))
+            {
+                var otp = new Random().Next(100000, 999999).ToString();
+                // Lưu vào cache nếu cần xác thực sau này, ở đây ta gửi mail chào mừng
+                _cache.Set($"OTP_{customer.Email}", otp, TimeSpan.FromMinutes(10));
+                await _emailService.SendEmailAsync(customer.Email, "Chào mừng bạn đến với BookWorm", otp, customer.FullName);
+            }
 
             return RedirectToAction(nameof(Index));
         }
