@@ -22,15 +22,29 @@ namespace LibraryManagementSystem.Controllers
 
         // INDEX
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? keyword)
         {
             ViewBag.Categories =
                 await _context.Categories.ToListAsync();
 
-            var books = await _context.Books
-                .Include(x => x.Category)
-                .ToListAsync();
+            var query = _context.Books
+    .Include(x => x.Category)
+    .AsQueryable();
 
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(x =>
+
+                    x.Title.Contains(keyword)
+                );
+            }
+
+            var books = await query
+
+                .OrderByDescending(x => x.Id)
+
+                .ToListAsync();
+            ViewBag.Keyword = keyword;
             return View(
                 "Views/Book/index.cshtml",
                 books
