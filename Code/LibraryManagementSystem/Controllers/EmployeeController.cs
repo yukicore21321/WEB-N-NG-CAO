@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Models;
+using Microsoft.AspNetCore.Identity;
+using LibraryManagementSystem.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -9,10 +12,24 @@ namespace LibraryManagementSystem.Controllers
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IEmailService _emailService;
+        private readonly IMemoryCache _cache;
 
-        public EmployeeController(ApplicationDbContext context)
+        public EmployeeController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IEmailService emailService,
+            IMemoryCache cache
+        )
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _emailService = emailService;
+            _cache = cache;
         }
 
         // =========================
@@ -68,8 +85,29 @@ namespace LibraryManagementSystem.Controllers
             }
 
             _context.Employees.Add(employee);
-
             await _context.SaveChangesAsync();
+
+            // ĐỒNG BỘ: Tạo tài khoản đăng nhập Identity
+            var user = new ApplicationUser
+            {
+                UserName = employee.Username,
+                Email = employee.Email,
+                FullName = employee.FullName,
+                PhoneNumber = employee.Phone,
+                EmailConfirmed = true,
+                MustChangePassword = true
+            };
+
+            var result = await _userManager.CreateAsync(user, employee.Password ?? "123456");
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, employee.Role ?? "Staff");
+
+                // Gửi OTP/Thông báo cho nhân viên mới
+                var otp = new Random().Next(100000, 999999).ToString();
+                _cache.Set($"OTP_{employee.Email}", otp, TimeSpan.FromMinutes(10));
+                await _emailService.SendEmailAsync(employee.Email, "Tài khoản nhân viên mới", otp, employee.FullName);
+            }
 
             return RedirectToAction(nameof(Index));
         }
