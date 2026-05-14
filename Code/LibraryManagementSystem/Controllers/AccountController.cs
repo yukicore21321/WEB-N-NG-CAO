@@ -124,8 +124,17 @@ namespace LibraryManagementSystem.Controllers
                     user.MustChangePassword = false;
                     user.LastPasswordChange = DateTime.Now;
                     await _userManager.UpdateAsync(user);
-                    await _signInManager.RefreshSignInAsync(user);
-                    return RedirectToAction("Index", "Home");
+
+                    // ĐỒNG BỘ MẬT KHẨU SANG BẢNG EMPLOYEES
+                    var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Username == user.UserName);
+                    if (employee != null)
+                    {
+                        employee.Password = newPassword; // Lưu mật khẩu mới vào bảng Employee
+                        await _context.SaveChangesAsync();
+                    }
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Admin");
                 }
             }
 
