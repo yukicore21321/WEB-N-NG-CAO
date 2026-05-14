@@ -49,22 +49,30 @@ namespace LibraryManagementSystem.Controllers
 
         [HttpPost("Create")]
         public async Task<IActionResult> Create(
-            Customer customer
+            Customer customer, string OtpCode
         )
         {
-            customer.CreatedAt = DateTime.Now;
+            // Kiểm tra mã OTP
+            if (_cache.TryGetValue($"OTP_{customer.Email}", out string? cachedOtp))
+            {
+                if (cachedOtp != OtpCode)
+                {
+                    ModelState.AddModelError("", "Mã OTP không chính xác.");
+                    return View("Views/Customer/Index.cshtml", await _context.Customers.ToListAsync());
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Mã OTP đã hết hạn hoặc không tồn tại.");
+                return View("Views/Customer/Index.cshtml", await _context.Customers.ToListAsync());
+            }
 
+            customer.CreatedAt = DateTime.Now;
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            // Gửi mail thông báo cho khách hàng mới (nếu có email)
-            if (!string.IsNullOrEmpty(customer.Email))
-            {
-                var otp = new Random().Next(100000, 999999).ToString();
-                // Lưu vào cache nếu cần xác thực sau này, ở đây ta gửi mail chào mừng
-                _cache.Set($"OTP_{customer.Email}", otp, TimeSpan.FromMinutes(10));
-                await _emailService.SendEmailAsync(customer.Email, "Chào mừng bạn đến với BookWorm", otp, customer.FullName);
-            }
+            // Xóa OTP sau khi dùng xong
+            _cache.Remove($"OTP_{customer.Email}");
 
             return RedirectToAction(nameof(Index));
         }
@@ -126,5 +134,37 @@ namespace LibraryManagementSystem.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // =========================
+        // AJAX: SEND OTP
+        // =========================
+
+        [HttpPost("SendOTP")]
+        public async Task<IActionResult> SendOTP([FromBody] OtpRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest(new { success = false, message = "Email không được để trống." });
+            }
+
+            try
+            {
+                var otp = new Random().Next(100000, 999999).ToString();
+                _cache.Set($"OTP_{request.Email}", otp, TimeSpan.FromMinutes(10));
+
+                await _emailService.SendEmailAsync(request.Email, "Mã xác thực đăng ký khách hàng", otp);
+
+                return Ok(new { success = true, message = "Mã OTP đã được gửi." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi gửi mail: " + ex.Message });
+            }
+        }
+    }
+
+    public class OtpRequest
+    {
+        public string Email { get; set; } = string.Empty;
     }
 }
