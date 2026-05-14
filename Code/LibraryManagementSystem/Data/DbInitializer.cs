@@ -14,29 +14,52 @@ namespace LibraryManagementSystem.Data
             // Seed Roles
             if (roleManager != null)
             {
-                if (!await roleManager.RoleExistsAsync("Admin"))
+                string[] roleNames = { "Admin", "Staff", "User" };
+                foreach (var roleName in roleNames)
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Admin"));
-                }
-                if (!await roleManager.RoleExistsAsync("User"))
-                {
-                    await roleManager.CreateAsync(new IdentityRole("User"));
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
                 }
             }
 
             // Seed Admin User
             var adminEmail = "admin@library.com";
+            var adminUsername = "admin"; // Sử dụng username ngắn gọn cho Admin
+            
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var admin = new ApplicationUser
                 {
-                    UserName = adminEmail,
+                    UserName = adminUsername,
                     Email = adminEmail,
                     FullName = "Hệ thống Admin",
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(admin, "Admin@123");
-                await userManager.AddToRoleAsync(admin, "Admin");
+                
+                var result = await userManager.CreateAsync(admin, "Admin@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, "Admin");
+
+                    // QUAN TRỌNG: Lưu luôn vào bảng Employees để có thể làm việc ngay
+                    if (!context.Employees.Any(e => e.Username == adminUsername))
+                    {
+                        var adminEmployee = new Employee
+                        {
+                            Username = adminUsername,
+                            Password = "Admin@123", // Trong thực tế nên hash, nhưng ở đây để khớp logic
+                            FullName = "Hệ thống Admin",
+                            Email = adminEmail,
+                            Role = "Admin",
+                            IsActive = true,
+                            CreatedAt = DateTime.Now
+                        };
+                        context.Employees.Add(adminEmployee);
+                        await context.SaveChangesAsync();
+                    }
+                }
             }
 
             // Seed Test User

@@ -102,14 +102,23 @@
 
         .instruction {
             position: absolute;
-            width: 258px;
+            width: 350px;
             height: 17px;
-            left: 102px;
-            top: 162px;
+            left: 50px;
+            top: 150px;
             font-weight: 400;
             font-size: 12px;
             line-height: 140%;
             color: #000000;
+        }
+
+        .error-msg {
+            position: absolute;
+            left: 50px;
+            top: 175px;
+            color: #ff4d4f;
+            font-size: 12px;
+            width: 350px;
         }
 
         .input-frame {
@@ -168,35 +177,49 @@
 
         <!-- Right Side - White -->
         <div class="form-side">
-            <div class="title">Sign Up</div>
-            <div class="instruction">Please provide your information to sign up.</div>
+            <div class="title" style="width: 250px; left: 50px;">Grant Account</div>
+            <div class="instruction">Cấp tài khoản mới cho Nhân viên hoặc Khách hàng.</div>
             
-            <form action="/Admin/Login" method="GET">
+            @if (ViewBag.Error != null)
+            {
+                <div class="error-msg">@ViewBag.Error</div>
+            }
+            
+            <form action="/Admin/Register" method="POST">
                 <!-- Row 1 -->
                 <div class="input-frame" style="width: 195px; height: 42px; left: 33px; top: 218px;">
-                    <input type="text" placeholder="First Name" required>
+                    <input type="text" name="firstName" placeholder="First Name" required>
                 </div>
                 <div class="input-frame" style="width: 195px; height: 42px; left: 244px; top: 218px;">
-                    <input type="text" placeholder="Last Name" required>
+                    <input type="text" name="lastName" placeholder="Last Name" required>
                 </div>
 
                 <!-- Row 2 -->
                 <div class="input-frame" style="width: 170px; height: 42px; left: 33px; top: 284px;">
-                    <input type="text" placeholder="Contact No" required>
+                    <input type="text" name="phone" placeholder="Contact No" required>
                 </div>
                 <div class="input-frame" style="width: 220px; height: 42px; left: 219px; top: 284px;">
-                    <input type="email" placeholder="Email" required>
+                    <input type="email" name="email" placeholder="Email" required>
                 </div>
 
                 <!-- Row 3 -->
                 <div class="input-frame" style="width: 195px; height: 42px; left: 33px; top: 350px;">
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" name="username" placeholder="Username" required>
                 </div>
                 <div class="input-frame" style="width: 195px; height: 42px; left: 244px; top: 350px;">
-                    <input type="password" placeholder="Password" required>
+                    <input type="password" name="password" placeholder="Password" required>
                 </div>
 
-                <button type="submit" class="btn-signup">SIGN UP</button>
+                <!-- Row 4 - Role -->
+                <div class="input-frame" style="width: 406px; height: 42px; left: 33px; top: 405px;">
+                    <select name="role" style="width: 100%; border: none; outline: none; font-family: 'Montserrat'; font-size: 13px; background: transparent;">
+                        <option value="User">Khách hàng (User)</option>
+                        <option value="Staff">Nhân viên (Staff)</option>
+                        <option value="Admin">Quản trị viên (Admin)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-signup" style="top: 470px;">GRANT ACCOUNT</button>
             </form>
         </div>
     </div>
