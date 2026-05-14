@@ -35,7 +35,7 @@ namespace LibraryManagementSystem.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Admin");
             }
             return View();
         }
@@ -61,7 +61,7 @@ namespace LibraryManagementSystem.Controllers
                             
                             return RedirectToAction("VerifyOTPChangePassword");
                         }
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Admin");
                     }
                 }
             }
