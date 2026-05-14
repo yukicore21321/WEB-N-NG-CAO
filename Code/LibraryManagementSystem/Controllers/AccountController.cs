@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Services;
 using Microsoft.Extensions.Caching.Memory;
+using LibraryManagementSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -12,17 +14,20 @@ namespace LibraryManagementSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly IMemoryCache _cache;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(
             SignInManager<ApplicationUser> signInManager, 
             UserManager<ApplicationUser> userManager,
             IEmailService emailService,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _emailService = emailService;
             _cache = cache;
+            _context = context;
         }
 
         [HttpGet]

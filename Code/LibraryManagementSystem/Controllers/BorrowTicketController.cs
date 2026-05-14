@@ -130,15 +130,15 @@ namespace LibraryManagementSystem.Controllers
             }
 
             // rollback old quantities
-            foreach (var oldDetail in existingTicket.TicketDetails)
+            if (existingTicket.TicketDetails != null)
             {
-                var oldBook =
-                    await _context.Books
-                        .FirstOrDefaultAsync(x => x.Id == oldDetail.BookId);
-
-                if (oldBook != null)
+                foreach (var oldDetail in existingTicket.TicketDetails)
                 {
-                    oldBook.AvailableQuantity += 1;
+                    var oldBook = await _context.Books.FirstOrDefaultAsync(x => x.Id == oldDetail.BookId);
+                    if (oldBook != null)
+                    {
+                        oldBook.AvailableQuantity += 1;
+                    }
                 }
             }
 
@@ -216,15 +216,15 @@ namespace LibraryManagementSystem.Controllers
             }
 
             // rollback quantity
-            foreach (var detail in ticket.TicketDetails)
+            if (ticket.TicketDetails != null)
             {
-                var book =
-                    await _context.Books
-                        .FirstOrDefaultAsync(x => x.Id == detail.BookId);
-
-                if (book != null)
+                foreach (var detail in ticket.TicketDetails)
                 {
-                    book.AvailableQuantity += 1;
+                    var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == detail.BookId);
+                    if (book != null)
+                    {
+                        book.AvailableQuantity += 1;
+                    }
                 }
             }
 
@@ -267,47 +267,41 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpPost("MarkReturned/{id}")]
-public async Task<IActionResult> MarkReturned(int id)
-{
-    var ticket = await _context.BorrowTickets
-        .Include(x => x.TicketDetails)
-        .FirstOrDefaultAsync(x => x.Id == id);
-
-    if (ticket == null)
-    {
-        return NotFound();
-    }
-
-    // đã trả rồi thì không xử lý nữa
-    if (ticket.Status == "Returned")
-    {
-        return RedirectToAction(nameof(Index));
-    }
-
-    // cập nhật trạng thái
-    ticket.Status = "Returned";
-
-    // ngày trả
-    ticket.ReturnDate = DateTime.Now;
-
-    // nhân viên nhận sách
-    ticket.ReceivedByEmployeeId = 1;
-
-    // tăng available quantity
-    foreach (var detail in ticket.TicketDetails)
-    {
-        var book = await _context.Books
-            .FindAsync(detail.BookId);
-
-        if (book != null)
+        public async Task<IActionResult> MarkReturned(int id)
         {
-            book.AvailableQuantity += 1;
+            var ticket = await _context.BorrowTickets
+                .Include(x => x.TicketDetails)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            if (ticket.Status == "Returned")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ticket.Status = "Returned";
+            ticket.ReturnDate = DateTime.Now;
+            ticket.ReceivedByEmployeeId = 1;
+
+            if (ticket.TicketDetails != null)
+            {
+                foreach (var detail in ticket.TicketDetails)
+                {
+                    var book = await _context.Books.FindAsync(detail.BookId);
+                    if (book != null)
+                    {
+                        book.AvailableQuantity += 1;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-    }
-
-    await _context.SaveChangesAsync();
-
-    return RedirectToAction(nameof(Index));
 }
     }
 }
