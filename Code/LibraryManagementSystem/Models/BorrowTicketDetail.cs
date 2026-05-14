@@ -21,8 +21,5 @@ namespace LibraryManagementSystem.Models
         [ForeignKey("BookId")]
         public virtual Book? Book { get; set; }
 
-        [Required]
-        [Display(Name = "Số lượng")]
-        public int Quantity { get; set; }
     }
 }

@@ -1,0 +1,1076 @@
+@model List<LibraryManagementSystem.Models.BorrowTicket>
+
+@{
+    ViewData["Title"] = "Quản lý phiếu mượn";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .add-modal-content {
+        position: relative;
+        width: 1020px;
+        height: 660px;
+        background: #F5F5F5;
+        border-radius: 12px;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    .modal-header-icon {
+        position: absolute;
+        width: 42px;
+        height: 42px;
+        left: 40px;
+        top: 35px;
+        background: #E3E3E3;
+        border-radius: 8px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-title {
+        position: absolute;
+        left: 95px;
+        top: 42px;
+
+        font-family: 'Montserrat';
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .close-square {
+        position: absolute;
+        top: 42px;
+        right: 40px;
+
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .modal-line {
+        position: absolute;
+        left: 40px;
+        top: 95px;
+
+        width: calc(100% - 80px);
+        height: 1px;
+        background: #A8A8A8;
+    }
+
+    .input-field-container {
+        position: absolute;
+    }
+
+    .modal-input {
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        background: white;
+        padding: 0 18px;
+        font-size: 15px;
+        outline: none;
+        box-sizing: border-box;
+        color: black;
+    }
+
+    .btn-cancel-popup-borrow-ticket {
+        height: 54px;
+        width: 48%;
+        background: #D9D9D9;
+
+        border: none;
+        border-radius: 10px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .btn-confirm-popup-borrow-ticket {
+        height: 54px;
+        width: 48%;
+        background: black;
+        color: white;
+
+        border: none;
+        border-radius: 10px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+    }
+
+    .btn-cancel-container {
+        position: absolute;
+        left: 100px;
+        right: 100px;
+        top: 550px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .label-borrowDate {
+        position: absolute;
+        top: 120px;
+    }
+
+    .label-dueDate {
+        position: absolute;
+        top: 410px;
+    }
+
+    .textarea-note {
+        height: 110px;
+        resize: none;
+        background: transparent;
+    }
+
+    .selected-book {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        background: white;
+
+        border-radius: 12px;
+
+        padding: 10px;
+
+        border: 1px solid #ECECEC;
+        width: 100%;
+
+        box-sizing: border-box;
+
+        flex-shrink: 0;
+    }
+
+    .selected-book img {
+
+        width: 50px;
+
+        height: 70px;
+
+        object-fit: cover;
+
+        border-radius: 8px;
+    }
+
+    .remove-book {
+
+        margin-left: auto;
+
+        width: 32px;
+
+        height: 32px;
+
+        border: none;
+
+        border-radius: 50%;
+
+        background: #F3F3F3;
+
+        cursor: pointer;
+
+        font-weight: bold;
+    }
+
+    .selected-books {
+
+        background-color: #ffffff;
+
+        height: 270px;
+
+        position: absolute;
+
+        top: 250px;
+
+        right: 93px;
+
+        width: 400px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 12px;
+
+        padding: 12px;
+
+        border-radius: 20px;
+
+        overflow-y: auto;
+
+        overflow-x: hidden;
+
+        box-sizing: border-box;
+
+        border: 1px solid #EAEAEA;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Quản lý phiếu mượn</h2>
+
+        <button class="btn btn-dark" onclick="openModal()">
+
+            Thêm phiếu mượn
+
+        </button>
+
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+                <th>Khách hàng</th>
+                <th>Ngày mượn</th>
+                <th>Hạn trả</th>
+                <th>Trạng thái</th>
+                <th width="150">Hành động</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@item.Id</td>
+
+                        <td>
+                            @(item.Customer?.FullName ?? "")
+                        </td>
+
+                        <td>
+                            @item.BorrowDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <td>
+                            @item.DueDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                       <td>
+
+    @if (
+        item.Status != "Returned" &&
+        item.DueDate.Date < DateTime.Now.Date
+    )
+    {
+        <span class="badge bg-danger">
+            Overdue
+        </span>
+    }
+    else if (item.Status == "Returned")
+    {
+        <span class="badge bg-success">
+            Returned
+        </span>
+    }
+    else
+    {
+        <span class="badge bg-warning text-dark">
+            Borrowed
+        </span>
+    }
+
+</td>
+
+                        <td>
+
+                            <div class="d-flex gap-2">
+
+                                <!-- EDIT -->
+                                @if (item.Status != "Returned")
+{
+    <button class="btn btn-sm" onclick="openEditModal(
+        @item.Id,
+        @item.CustomerId,
+        '@item.Customer?.FullName',
+        '@item.Customer?.Phone',
+        '@item.BorrowDate.ToString("yyyy-MM-dd")',
+        '@item.DueDate.ToString("yyyy-MM-dd")',
+        '@item.ReturnDate?.ToString("yyyy-MM-dd")',
+        '@item.Status',
+        '@item.Note',
+        @item.CreatedByEmployeeId,
+        @(item.ReceivedByEmployeeId ?? 0),
+        '@Html.Raw(
+            System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(
+                System.Text.Json.JsonSerializer.Serialize(
+                    item?.TicketDetails?.Select(x => new {
+                        id = x.BookId,
+                        title = x.Book?.Title,
+                        author = x.Book?.Author,
+                        image = x.Book?.ImageUrl
+                    })
+                )
+            )
+        )'
+    )">
+
+        <img src="~/images/edit-icon.png"
+             width="32"
+             height="32" />
+
+    </button>
+}else{
+    <button class="btn btn-sm" disabled>
+
+        <img src="~/images/edit-icon.png"
+             width="32"
+             height="32" />
+
+    </button>
+}
+
+                                <!-- DELETE -->
+                                <form asp-controller="BorrowTicket" asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                      onsubmit="return confirm('Bạn có chắc muốn xoá phiếu mượn này?');">
+
+                                    <button type="submit" class="btn btn-sm">
+
+                                        <img src="~/images/trash-icon.png" width="32" height="32" />
+
+                                    </button>
+
+                                </form>
+                    @if (item.Status != "Returned")
+
+{
+
+    <form asp-controller="BorrowTicket"
+
+          asp-action="MarkReturned"
+
+          asp-route-id="@item.Id"
+
+          method="post">
+
+        <button type="submit"
+
+                class="btn btn-success btn-sm">
+
+            Đã trả
+
+        </button>
+
+    </form>
+
+}
+                            </div>
+
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="borrowTicketModal">
+
+    <div class="add-modal-content">
+
+        <!-- ICON -->
+        <div class="modal-header-icon">
+
+            <img src="~/images/book-icon.png" width="32" height="32" />
+
+        </div>
+
+        <!-- TITLE -->
+        <h2 class="modal-title" id="modalTitle">
+
+            Thêm phiếu mượn
+
+        </h2>
+
+        <!-- CLOSE -->
+        <button class="close-square" onclick="closeModalBorrowTicket()">
+
+            <img src="~/images/close-icon.png" width="32" height="32" />
+
+        </button>
+
+        <!-- LINE -->
+        <div class="modal-line"></div>
+
+        <!-- FORM -->
+        <form id="borrowTicketForm" method="post" asp-action="Create">
+
+            <input type="hidden" id="borrowTicketId" name="Id" />
+            <div>
+                <!-- BORROW DATE -->
+                <label class="label-borrowDate" id="label-borrowDate" for="">Ngày tạo phiếu:</label>
+                <input type="hidden" id="borrowDate" name="BorrowDate" required>
+
+                <!-- CUSTOMER -->
+                <div class="input-field-container" style="
+                    width:400px;
+                    left:93px;
+                    top:180px;
+                    ">
+
+                    <!-- hidden customer id -->
+                    <input type="hidden" id="customerId" name="CustomerId" />
+
+                    <!-- search input -->
+                    <input type="text" class="modal-input" id="customerSearch"
+                           placeholder="Nhập số điện thoại khách hàng" autocomplete="off" />
+
+                    <!-- dropdown -->
+                    <div id="customerDropdown" style="
+                        display:none;
+                        position:absolute;
+                        top:50px;
+                        left:0;
+                        width:100%;
+                        background:white;
+                        border-radius:12px;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+                        max-height:220px;
+                        overflow-y:auto;
+                        z-index:9999;
+                        ">
+
+                        @foreach (var customer in (List<LibraryManagementSystem.Models.Customer>)ViewBag.Customers)
+                        {
+                            <div class="customer-item" data-id="@customer.Id" data-name="@customer.FullName"
+                                 data-phone="@customer.Phone" style="
+                                padding:12px 16px;
+                                cursor:pointer;
+                                border-bottom:1px solid #F1F1F1;
+                                ">
+
+                                <div style="
+                                    font-weight:600;
+                                    color:black;
+                                    ">
+                                    @customer.FullName
+                                </div>
+
+                                <div style="
+                                    font-size:14px;
+                                    color:#777;
+                                    ">
+                                    @customer.Phone
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+                <!-- NOTE -->
+                <div class="input-field-container" style="width:400px;height:120px;left:93px;top:250px;">
+                    <textarea class="modal-input textarea-note" id="note" name="Note" placeholder="Ghi chú"></textarea>
+                </div>
+
+                <div style="position:absolute;top:400px;width:45%;height:1px;background:#000000;"> </div>
+
+                <!-- DUE DATE -->
+                <label class="label-dueDate" id="label-dueDate" for="">Ngày trả dự kiến:</label>
+                <div class="input-field-container" style="width:400px;height:42px;left:93px;top:450px;">
+                    <input type="date" class="modal-input" id="dueDate" name="DueDate" required>
+                </div>
+            </div>
+
+            <div>
+
+                <div class="input-field-container" style="
+                    width:400px;
+                    right:93px;
+                    top:180px;
+                    ">
+
+                    <!-- search -->
+                    <input type="text" class="modal-input" id="bookSearch" placeholder="Tìm kiếm sách"
+                           autocomplete="off" />
+
+                    <!-- dropdown -->
+                    <div id="bookDropdown" style="
+                        display:none;
+                        position:absolute;
+                        top:50px;
+                        left:0;
+                        width:100%;
+                        background:white;
+                        border-radius:12px;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.12);
+                        max-height:320px;
+                        overflow-y:auto;
+                        z-index:9999;
+                        ">
+
+                        @foreach (var book in (List<LibraryManagementSystem.Models.Book>)ViewBag.Books)
+                        {
+                            <div class="book-item" data-id="@book.Id" data-title="@book.Title" data-author="@book.Author"
+                                 data-image="@book.ImageUrl" data-available="@book.AvailableQuantity" style="
+                                display:flex;
+                                gap:12px;
+                                padding:12px;
+                                cursor:pointer;
+                                border-bottom:1px solid #F1F1F1;
+                                ">
+
+                                <img src="@book.ImageUrl" style="
+                                width:60px;
+                                height:80px;
+                                object-fit:cover;
+                                border-radius:8px;
+                                " />
+
+                                <div style="flex:1;">
+
+                                    <div style="
+                                        font-weight:700;
+                                        color:black;
+                                        margin-bottom:6px;
+                                        ">
+                                        @book.Title
+                                    </div>
+
+                                    <div style="
+                                        font-size:14px;
+                                        color:#777;
+                                        margin-bottom:6px;
+                                        ">
+                                        @book.Author
+                                    </div>
+
+                                    <div style="
+                                        font-size:13px;
+                                        font-weight:600;
+                                        color:@(book.AvailableQuantity > 0 ? "#0F9D58" : "#E53935");
+                                        ">
+                                        Còn lại: @book.AvailableQuantity quyển
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+
+                </div>
+                <!-- selected books -->
+                <div id="selectedBooks" class="input-field-container selected-books">
+                    <div id="selectedBookInputs" style="
+                    width:400px;
+                    right:93px;
+                    top:250px;
+                    "></div>
+
+                </div>
+            </div>
+            <!-- CREATED BY -->
+            <input type="hidden" id="createdByEmployeeId" name="CreatedByEmployeeId" />
+
+            <!-- RECEIVED BY -->
+            <input type="hidden" id="receivedByEmployeeId" name="ReceivedByEmployeeId" />
+
+            <!-- BUTTON -->
+            <div class="btn-cancel-container">
+                <button type="button" class="btn-cancel-popup-borrow-ticket" onclick="closeModalBorrowTicket()">
+
+                    Huỷ
+
+                </button>
+
+                <button type="submit" class="btn-confirm-popup-borrow-ticket" id="saveBtn">
+
+                    LƯU
+
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+    const modalBorrowTicket =
+        document.getElementById("borrowTicketModal");
+
+    const openModal = () => {
+
+        const today = new Date();
+
+        const formattedDate =
+            today.toISOString().split('T')[0];
+
+        const formattedText =
+            today.toLocaleDateString('vi-VN');
+
+        document.getElementById("borrowDate").value =
+            formattedDate;
+
+        document.getElementById("label-borrowDate").innerText =
+            "Ngày tạo phiếu: " + formattedText;
+
+
+        document.getElementById("modalTitle").innerText =
+            "Thêm phiếu mượn";
+
+        document.getElementById("borrowTicketForm").action =
+            "/Admin/BorrowTicket/Create";
+
+        document.getElementById("borrowTicketId").value = "";
+
+        document.getElementById("customerId").value = "";
+
+
+        document.getElementById("dueDate").value = "";
+
+        document.getElementById("note").value = "";
+
+        modalBorrowTicket.style.display = "flex";
+    }
+
+    function openEditModal(
+        id,
+        customerId,
+        customerName,
+        customerPhone,
+        borrowDate,
+        dueDate,
+        returnDate,
+        status,
+        note,
+        createdByEmployeeId,
+        receivedByEmployeeId,
+        booksJson
+    ) {
+        selectedBooks.querySelectorAll(
+    ".selected-book"
+).forEach(x => x.remove());
+
+selectedBookInputs.innerHTML = "";
+        selectedBookIds = [];
+        const books =
+         JSON.parse(booksJson);
+
+         books.forEach(book => {
+
+    selectedBookIds.push(
+        book.id.toString()
+    );
+
+    const selectedItem =
+        document.createElement("div");
+
+    selectedItem.className =
+        "selected-book";
+
+    selectedItem.id =
+        "selected-book-" + book.id;
+
+    const orderNumber =
+    selectedBookIds.length;
+
+selectedItem.innerHTML = `
+
+    <div style="
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        background:black;
+        color:white;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        flex-shrink:0;
+    ">
+        ${orderNumber}
+    </div>
+
+    <img src="${book.image}" />
+
+    <div style="flex:1;">
+
+        <div style="font-weight:700;">
+            ${book.title}
+        </div>
+
+        <div style="
+            font-size:14px;
+            color:#777;
+            margin-top:4px;
+        ">
+            ${book.author}
+        </div>
+
+    </div>
+
+    <button type="button"
+            class="remove-book"
+            onclick="removeBook('${book.id}')">
+
+        ✕
+
+    </button>
+`;
+
+    selectedBooks.appendChild(
+        selectedItem
+    );
+    const hiddenInput =
+    document.createElement("input");
+
+hiddenInput.type = "hidden";
+
+hiddenInput.name = "BookIds";
+
+hiddenInput.value = book.id;
+
+hiddenInput.id =
+    "book-input-" + book.id;
+
+selectedBookInputs.appendChild(
+    hiddenInput
+);
+});
+        document.getElementById("modalTitle").innerText =
+            "Cập nhật phiếu mượn";
+
+        document.getElementById("borrowTicketForm").action =
+            "/Admin/BorrowTicket/Edit";
+
+        document.getElementById("borrowTicketId").value =
+            id;
+
+        document.getElementById("customerId").value =
+            customerId;
+
+        document.getElementById("borrowDate").value =
+            borrowDate;
+
+        document.getElementById("dueDate").value =
+            dueDate;
+
+
+        document.getElementById("note").value =
+            note;
+
+        document.getElementById("createdByEmployeeId").value =
+            createdByEmployeeId;
+
+        document.getElementById("receivedByEmployeeId").value =
+            receivedByEmployeeId;
+            document.getElementById("customerSearch").value =
+    customerName + " - " + customerPhone;
+
+        modalBorrowTicket.style.display = "flex";
+    }
+
+    const closeModalBorrowTicket = () => {
+
+        modalBorrowTicket.style.display = "none";
+    }
+
+</script>
+
+<script>
+    const customerSearch =
+        document.getElementById("customerSearch");
+
+    const customerDropdown =
+        document.getElementById("customerDropdown");
+
+    const customerItems =
+        document.querySelectorAll(".customer-item");
+
+    customerSearch.addEventListener("focus", () => {
+
+        customerDropdown.style.display = "block";
+    });
+
+    customerSearch.addEventListener("input", function () {
+
+        const value =
+            this.value.toLowerCase();
+
+        customerItems.forEach(item => {
+
+            const phone =
+                item.dataset.phone.toLowerCase();
+
+            const name =
+                item.dataset.name.toLowerCase();
+
+            if (
+                phone.includes(value) ||
+                name.includes(value)
+            ) {
+
+                item.style.display = "block";
+            }
+            else {
+
+                item.style.display = "none";
+            }
+        });
+
+        customerDropdown.style.display = "block";
+    });
+
+    customerItems.forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            document.getElementById("customerId").value =
+                item.dataset.id;
+
+            customerSearch.value =
+                item.dataset.name +
+                " - " +
+                item.dataset.phone;
+
+            customerDropdown.style.display = "none";
+        });
+    });
+
+    document.addEventListener("click", function (e) {
+
+        if (
+            !customerSearch.contains(e.target) &&
+            !customerDropdown.contains(e.target)
+        ) {
+
+            customerDropdown.style.display = "none";
+        }
+    });
+</script>
+
+<script>
+    const bookSearch =
+        document.getElementById("bookSearch");
+
+    const bookDropdown =
+        document.getElementById("bookDropdown");
+
+    const selectedBooks =
+        document.getElementById("selectedBooks");
+
+    const selectedBookInputs =
+        document.getElementById("selectedBookInputs");
+
+    const bookItems =
+        document.querySelectorAll(".book-item");
+
+    let selectedBookIds = [];
+
+    bookSearch.addEventListener("focus", () => {
+
+        bookDropdown.style.display = "block";
+    });
+
+    bookSearch.addEventListener("input", function () {
+
+        const value =
+            this.value.toLowerCase();
+
+        bookItems.forEach(item => {
+
+            const title =
+                item.dataset.title.toLowerCase();
+
+            const author =
+                item.dataset.author.toLowerCase();
+
+            if (
+                title.includes(value) ||
+                author.includes(value)
+            ) {
+
+                item.style.display = "flex";
+            }
+            else {
+
+                item.style.display = "none";
+            }
+        });
+
+        bookDropdown.style.display = "block";
+    });
+
+    bookItems.forEach(item => {
+
+        item.addEventListener("click", () => {
+
+            const id =
+                item.dataset.id;
+
+            if (selectedBookIds.includes(id)) {
+
+                return;
+            }
+
+            selectedBookIds.push(id);
+
+            // create selected ui
+            const selectedItem =
+                document.createElement("div");
+
+            selectedItem.className =
+                "selected-book";
+
+            selectedItem.id =
+                "selected-book-" + id;
+
+            const orderNumber =
+    selectedBookIds.length;
+
+selectedItem.innerHTML = `
+
+    <div style="
+        width:32px;
+        height:32px;
+        border-radius:50%;
+        background:black;
+        color:white;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        flex-shrink:0;
+    ">
+        ${orderNumber}
+    </div>
+
+    <img src="${item.dataset.image}" />
+
+    <div style="flex:1;">
+
+        <div style="font-weight:700;">
+            ${item.dataset.title}
+        </div>
+
+        <div style="
+            font-size:14px;
+            color:#777;
+            margin-top:4px;
+        ">
+            ${item.dataset.author}
+        </div>
+
+        <div style="
+            font-size:13px;
+            color:#0F9D58;
+            margin-top:4px;
+            font-weight:600;
+        ">
+            Còn lại: ${item.dataset.available} quyển
+        </div>
+
+    </div>
+
+    <button type="button"
+            class="remove-book"
+            onclick="removeBook('${id}')">
+
+        ✕
+
+    </button>
+`;
+
+            selectedBooks.appendChild(
+                selectedItem
+            );
+
+            // hidden input
+            const hiddenInput =
+                document.createElement("input");
+
+            hiddenInput.type = "hidden";
+
+            hiddenInput.name =
+                "BookIds";
+
+            hiddenInput.value =
+                id;
+
+            hiddenInput.id =
+                "book-input-" + id;
+
+            selectedBookInputs.appendChild(
+                hiddenInput
+            );
+
+            // reset search
+            bookSearch.value = "";
+
+            bookDropdown.style.display = "none";
+        });
+    });
+
+    function removeBook(id) {
+
+        selectedBookIds =
+            selectedBookIds.filter(x => x != id);
+
+        document
+            .getElementById("selected-book-" + id)
+            .remove();
+
+        document
+            .getElementById("book-input-" + id)
+            .remove();
+    }
+
+    document.addEventListener("click", function (e) {
+
+        if (
+            !bookSearch.contains(e.target) &&
+            !bookDropdown.contains(e.target)
+        ) {
+
+            bookDropdown.style.display = "none";
+        }
+    });
+</script>
