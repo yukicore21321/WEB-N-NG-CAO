@@ -32,10 +32,39 @@ namespace LibraryManagementSystem.Controllers
             _cache = cache;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            ViewData["Title"] = "Tổng quan hệ thống";
-            return View();
+            ViewBag.TotalBooks =
+                await _context.Books.CountAsync();
+            ViewBag.TotalCategories =
+                await _context.Categories.CountAsync();
+            ViewBag.TotalCustomers =
+                await _context.Customers.CountAsync();
+            ViewBag.TotalBorrowing =
+                await _context.BorrowTickets
+                    .CountAsync(x => x.Status != "Returned");
+            ViewBag.TotalOverdue =
+                await _context.BorrowTickets
+                    .CountAsync(x =>
+                        x.Status != "Returned" &&
+                        x.DueDate < DateTime.Now
+                    );
+            ViewBag.TotalBorrowedBooks =
+                await _context.BorrowTicketDetails.CountAsync();
+            ViewBag.RecentTickets =
+                await _context.BorrowTickets
+                    .Include(x => x.Customer)
+                    .OrderByDescending(x => x.Id)
+                    .Take(6)
+                    .ToListAsync();
+            ViewBag.LatestBooks =
+                await _context.Books
+                    .OrderByDescending(x => x.Id)
+                    .Take(5)
+                    .ToListAsync();
+            return View(
+                "~/Views/Admin/index.cshtml"
+            );
         }
 
         public IActionResult Books()

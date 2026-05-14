@@ -1,262 +1,335 @@
+
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 <style>
     .dashboard-container {
-        position: relative;
-        width: 100%;
-        min-height: 1009px;
-        background: #F2F2F2;
+        padding: 24px;
     }
-
-    .widget-base {
-        position: absolute;
-        background: #FFFFFF;
-        border-radius: 12px;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.05);
+    .dashboard-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 24px;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+    .stats-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+        position: relative;
         overflow: hidden;
     }
-
-    /* Frame 216 - Overdue Borrowers - Pinned to RIGHT */
-    .overdue-widget {
-        width: 333px;
-        height: 408px;
-        right: 40px;
-        top: 38px;
-    }
-
-    /* Frame 225 - Branch Network - Pinned to RIGHT */
-    .branch-network-widget {
-        width: 333px;
-        height: 453px;
-        right: 40px;
-        top: 485px;
-    }
-
-    /* Stat Cards - Vertical Column */
-    .stat-card {
-        width: 389px;
-        height: 121px;
-        left: 880px; 
-    }
-
-    .stat-icon-box {
+    .stats-card::after {
+        content: "";
         position: absolute;
-        width: 80px;
-        height: 88px;
-        left: 20px;
-        top: 17px;
-        background: rgba(167, 167, 167, 0.2);
-        border-radius: 12px;
+        right: -20px;
+        bottom: -20px;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.04);
+    }
+    .stats-label {
+        font-size: 15px;
+        color: #777;
+        margin-bottom: 12px;
+    }
+    .stats-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: black;
+    }
+    .stats-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: #F3F3F3;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #151619;
-    }
-
-    .stat-line {
         position: absolute;
-        width: 2px;
-        height: 105px;
-        left: 121px;
-        top: 8px;
-        background: #000000;
+        top: 24px;
+        right: 24px;
     }
-
-    .stat-value {
-        position: absolute;
-        left: 148px;
-        top: 17px;
-        font-weight: 800;
-        font-size: 49px;
-        color: #151619;
-        margin: 0;
+    .dashboard-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
     }
-
-    .stat-label {
-        position: absolute;
-        left: 147px;
-        top: 82px;
-        font-weight: 400;
+    .dashboard-box {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+    .dashboard-box-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    .borrow-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .borrow-table th {
+        background: #111;
+        color: white;
+        padding: 14px;
+        font-size: 14px;
+    }
+    .borrow-table td {
+        padding: 14px;
+        border-bottom: 1px solid #ECECEC;
+        font-size: 14px;
+    }
+    .status-borrowed {
+        background: #FFF3CD;
+        color: #856404;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .status-returned {
+        background: #D4EDDA;
+        color: #155724;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .status-overdue {
+        background: #F8D7DA;
+        color: #721C24;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .book-item {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid #ECECEC;
+    }
+    .book-item:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+    .book-item img {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+    .book-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+    .book-author {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 6px;
+    }
+    .book-quantity {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0F9D58;
+    }
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .quick-box {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+    .quick-box h4 {
         font-size: 16px;
-        color: #151619;
+        margin-bottom: 12px;
+    }
+    .quick-box p {
+        font-size: 28px;
+        font-weight: 700;
         margin: 0;
     }
-
-    /* Frame 227 - Admins */
-    .admins-widget {
-        width: 424px;
-        height: 437px;
-        left: 829px; 
-        top: 520px;
+    @@media(max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .dashboard-row {
+            grid-template-columns: 1fr;
+        }
     }
-
-    /* Frame 217 - Borrowed Summary */
-    .summary-widget {
-        width: 515px;
-        height: 148px;
-        left: 159px;
-        top: 811px;
-    }
-
-    .item-row-box {
-        box-sizing: border-box;
-        width: 291px;
-        height: 50px;
-        border: 1.5px solid #000000;
-        border-radius: 12px;
-        margin: 10px auto;
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
-    }
-
-    .list-icon {
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #000;
-    }
-
-    .admin-item-box {
-        box-sizing: border-box;
-        width: 364px;
-        height: 78px;
-        border: 1.5px solid #000000;
-        border-radius: 12px;
-        margin: 10px auto;
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
+    @@media(max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        .quick-stats {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
-
 <div class="dashboard-container">
-    <!-- Large Pie Chart -->
-    <div style="position: absolute; width: 630px; height: 630px; left: 80px; top: 100px; background: conic-gradient(#151619 0% 70%, #3D3E3E 70% 100%); border-radius: 50%;"></div>
-
-    <!-- Stat 1: User Base -->
-    <div class="widget-base stat-card" style="top: 38px;">
-        <div class="stat-icon-box">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-        </div>
-        <div class="stat-line"></div>
-        <p class="stat-value">0150</p>
-        <p class="stat-label">Total User Base</p>
+    <div class="dashboard-title">
+        Dashboard thống kê thư viện
     </div>
-
-    <!-- Stat 2: Book Count -->
-    <div class="widget-base stat-card" style="top: 187px;">
-        <div class="stat-icon-box">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5V4.5C4 3.39543 4.89543 2.5 6 2.5H18C19.1046 2.5 20 3.39543 20 4.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5Z"></path>
-                <path d="M12 2.5V21.5"></path>
-            </svg>
-        </div>
-        <div class="stat-line"></div>
-        <p class="stat-value">01500</p>
-        <p class="stat-label">Total Book Count</p>
-    </div>
-
-    <!-- Stat 3: Branch Count -->
-    <div class="widget-base stat-card" style="top: 336px;">
-        <div class="stat-icon-box">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 21h18"></path>
-                <path d="M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3"></path>
-                <path d="M19 21V11"></path>
-                <path d="M5 21V11"></path>
-                <path d="M9 21v-4a2 2 0 0 1 4 0v4"></path>
-            </svg>
-        </div>
-        <div class="stat-line"></div>
-        <p class="stat-value">0010</p>
-        <p class="stat-label">Branch Count</p>
-    </div>
-
-    <!-- Overdue Borrowers - Pinned Right -->
-    <div class="widget-base overdue-widget" style="padding: 20px;">
-        <h3 style="font-weight: 500; font-size: 22px; margin: 0 0 20px 0; text-align: center;">Overdue Borrowers</h3>
-        @for(int i=0; i<4; i++){
-            <div class="item-row-box">
-                <div class="list-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <div style="width: 1.5px; height: 39px; background: #000; margin: 0 15px;"></div>
-                <div>
-                    <p style="margin:0; font-size: 13px; font-weight: 500;">Sasmith Gunasekara</p>
-                    <p style="margin:0; font-size: 13px; color: #727374;">Borrowed ID : 10</p>
-                </div>
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stats-card">
+            <div class="stats-icon">
+                <img src="~/images/book-icon.png" width="28" />
             </div>
-        }
-    </div>
-
-    <!-- Branch Network - Pinned Right -->
-    <div class="widget-base branch-network-widget" style="padding: 20px;">
-        <h3 style="font-weight: 500; font-size: 22px; margin: 0 0 20px 0; text-align: center;">Branch Network</h3>
-        @for(int i=0; i<5; i++){
-            <div class="item-row-box">
-                <div class="list-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                </div>
-                <div style="width: 1.5px; height: 39px; background: #000; margin: 0 15px;"></div>
-                <div>
-                    <p style="margin:0; font-size: 13px; font-weight: 500;">BookWorm - Matara</p>
-                    <p style="margin:0; font-size: 13px; color: #727374;">Branch ID : 1</p>
-                </div>
+            <div class="stats-label">
+                Tổng số sách
             </div>
-        }
-    </div>
-
-    <!-- Admins -->
-    <div class="widget-base admins-widget" style="padding: 20px;">
-        <h3 style="font-weight: 500; font-size: 22px; margin: 0 0 20px 0; text-align: center;">BookWorm Admins</h3>
-        @for(int i=0; i<3; i++){
-            <div class="admin-item-box">
-                <div style="width: 42px; height: 42px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <div style="width: 1.5px; height: 54px; background: #000; margin: 0 15px;"></div>
-                <div>
-                    <p style="margin:0; font-weight: 600; font-size: 16px;">Nisal Gunasekara</p>
-                    <p style="margin:0; font-size: 13px;">Admin ID : 1</p>
-                </div>
+            <div class="stats-value">
+                @ViewBag.TotalBooks
             </div>
-        }
-    </div>
-
-    <!-- Summary -->
-    <div class="widget-base summary-widget" style="padding: 0 30px; display: flex; align-items: center;">
-        <div style="width: 60px; height: 60px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
         </div>
-        <div style="width: 2px; height: 114px; background: #000; margin: 0 30px;"></div>
-        <div>
-            <p style="font-weight: 500; font-size: 22px; margin: 10px 0;">Total Borrowed Books</p>
-            <p style="font-weight: 500; font-size: 22px; margin: 10px 0;">Total Returned Books</p>
+        <div class="stats-card">
+            <div class="stats-icon">
+                <img src="~/images/category-icon.png" width="28" />
+            </div>
+            <div class="stats-label">
+                Thể loại
+            </div>
+            <div class="stats-value">
+                @ViewBag.TotalCategories
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon">
+                <img src="~/images/customer-icon.png" width="28" />
+            </div>
+            <div class="stats-label">
+                Khách hàng
+            </div>
+            <div class="stats-value">
+                @ViewBag.TotalCustomers
+            </div>
+        </div>
+        <div class="stats-card">
+            <div class="stats-icon">
+                <img src="~/images/borrow-icon.png" width="28" />
+            </div>
+            <div class="stats-label">
+                Phiếu đang mượn
+            </div>
+            <div class="stats-value">
+                @ViewBag.TotalBorrowing
+            </div>
+        </div>
+    </div>
+    <!-- ROW -->
+    <div class="dashboard-row">
+        <!-- RECENT BORROW -->
+        <div class="dashboard-box">
+            <div class="dashboard-box-title">
+                Phiếu mượn gần đây
+            </div>
+            <table class="borrow-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày mượn</th>
+                        <th>Hạn trả</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.RecentTickets)
+                    {
+                        <tr>
+                            <td>#@item.Id</td>
+                            <td>
+                                @item.Customer.FullName
+                            </td>
+                            <td>
+                                @item.BorrowDate.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.DueDate.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @if (item.Status == "Returned")
+                                {
+                                    <span class="status-returned">
+                                        Returned
+                                    </span>
+                                }
+                                else if (
+                                    item.DueDate.Date < DateTime.Now.Date
+                                )
+                                {
+                                    <span class="status-overdue">
+                                        Overdue
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-borrowed">
+                                        Borrowed
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- TOP BOOKS -->
+        <div class="dashboard-box">
+            <div class="dashboard-box-title">
+                Sách mới thêm
+            </div>
+            @foreach (var book in ViewBag.LatestBooks)
+            {
+                <div class="book-item">
+                    <img src="@book.ImageUrl" />
+                    <div>
+                        <div class="book-title">
+                            @book.Title
+                        </div>
+                        <div class="book-author">
+                            @book.Author
+                        </div>
+                        <div class="book-quantity">
+                            Còn @book.AvailableQuantity quyển
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- QUICK -->
+    <div class="quick-stats">
+        <div class="quick-box">
+            <h4>Sách đã được mượn</h4>
+            <p>@ViewBag.TotalBorrowedBooks</p>
+        </div>
+        <div class="quick-box">
+            <h4>Phiếu quá hạn</h4>
+            <p>@ViewBag.TotalOverdue</p>
         </div>
     </div>
 </div>
+
+
+
+
