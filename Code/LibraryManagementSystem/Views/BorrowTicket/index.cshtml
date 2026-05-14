@@ -233,7 +233,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <h2>Quản lý phiếu mượn</h2>
-
+        
         <button class="btn btn-dark" onclick="openModal()">
 
             Thêm phiếu mượn
@@ -241,7 +241,54 @@
         </button>
 
     </div>
+    <div class="d-flex gap-3 align-items-center mb-4">
 
+    <form method="get"
+          asp-controller="BorrowTicket"
+          asp-action="Index"
+          class="d-flex gap-2">
+
+        <select name="status"
+                class="form-select"
+                style="width:220px;">
+
+            <option value="">
+                -- Tất cả trạng thái --
+            </option>
+
+            <option value="Borrowed"
+                    selected="@(ViewBag.Status == "Borrowed")">
+
+                Đang mượn
+
+            </option>
+
+            <option value="Returned"
+                    selected="@(ViewBag.Status == "Returned")">
+
+                Đã trả
+
+            </option>
+
+            <option value="Overdue"
+                    selected="@(ViewBag.Status == "Overdue")">
+
+                Quá hạn
+
+            </option>
+
+        </select>
+
+        <button type="submit"
+                class="btn btn-dark">
+
+            Lọc
+
+        </button>
+
+    </form>
+
+</div>
     <table class="table table-bordered table-hover align-middle">
 
         <thead class="table-dark">

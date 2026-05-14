@@ -20,14 +20,42 @@ namespace LibraryManagementSystem.Controllers
         // =========================
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? status)
         {
-            var tickets = await _context.BorrowTickets
+            var query = _context.BorrowTickets
 
-                .Include(x => x.Customer)
+    .Include(x => x.Customer)
 
-                .Include(x => x.TicketDetails)
-                    .ThenInclude(td => td.Book)
+    .Include(x => x.TicketDetails)
+        .ThenInclude(td => td.Book)
+
+    .AsQueryable();
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status == "Borrowed")
+                {
+                    query = query.Where(x =>
+                        x.Status != "Returned" &&
+                        x.DueDate >= DateTime.Now.Date
+                    );
+                }
+                else if (status == "Returned")
+                {
+                    query = query.Where(x =>
+                        x.Status == "Returned"
+                    );
+                }
+                else if (status == "Overdue")
+                {
+                    query = query.Where(x =>
+                        x.Status != "Returned" &&
+                        x.DueDate < DateTime.Now.Date
+                    );
+                }
+            }
+
+            var tickets = await query
 
                 .OrderByDescending(x => x.Id)
 
@@ -38,7 +66,7 @@ namespace LibraryManagementSystem.Controllers
 
             ViewBag.Books =
                 await _context.Books.ToListAsync();
-
+            ViewBag.Status = status;
             return View(
                 "~/Views/BorrowTicket/index.cshtml",
                 tickets
