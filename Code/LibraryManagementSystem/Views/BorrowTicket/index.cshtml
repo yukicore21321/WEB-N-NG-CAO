@@ -294,7 +294,7 @@
         <thead class="table-dark">
 
             <tr>
-
+                <th>STT</th>
                 <th>ID</th>
                 <th>Khách hàng</th>
                 <th>Ngày mượn</th>
@@ -303,18 +303,21 @@
                 <th width="150">Hành động</th>
 
             </tr>
-
+   stt++;
         </thead>
 
         <tbody>
 
             @if (Model != null && Model.Any())
             {
+                 int stt = 1;
+
                 @foreach (var item in Model)
                 {
                     <tr>
 
-                        <td>@item.Id</td>
+                        <td>@stt</td>
+                        <td>#@item.Id</td>
 
                         <td>
                             @(item.Customer?.FullName ?? "")
