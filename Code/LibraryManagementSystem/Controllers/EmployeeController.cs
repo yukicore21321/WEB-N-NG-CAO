@@ -61,7 +61,6 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(Employee employee)
         {
-
             // default value
             employee.CreatedAt = DateTime.Now;
 
@@ -69,14 +68,11 @@ namespace LibraryManagementSystem.Controllers
             {
                 employee.Role = "Staff";
             }
-            employee.IsActive = employee.IsActive;
-
-
+            
             // username default = phone
             if (string.IsNullOrEmpty(employee.Username))
             {
-                employee.Username =
-                    employee.Phone ?? "";
+                employee.Username = employee.Phone ?? "";
             }
 
             // password default
@@ -85,10 +81,15 @@ namespace LibraryManagementSystem.Controllers
                 employee.Password = "123456";
             }
 
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            // check if username or email already exists in Identity
+            var existingUser = await _userManager.FindByNameAsync(employee.Username) ?? await _userManager.FindByEmailAsync(employee.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("", "Tài khoản hoặc Email đã tồn tại trong hệ thống.");
+                return View("~/Views/Employee/index.cshtml", await _context.Employees.OrderByDescending(x => x.Id).ToListAsync());
+            }
 
-            // ĐỒNG BỘ: Tạo tài khoản đăng nhập Identity
+            // ĐỒNG BỘ: Tạo tài khoản đăng nhập Identity TRƯỚC
             var user = new ApplicationUser
             {
                 UserName = employee.Username,
@@ -96,21 +97,37 @@ namespace LibraryManagementSystem.Controllers
                 FullName = employee.FullName,
                 PhoneNumber = employee.Phone,
                 EmailConfirmed = true,
-                MustChangePassword = true
+                MustChangePassword = true // Khôi phục yêu cầu đổi mật khẩu
             };
 
-            var result = await _userManager.CreateAsync(user, employee.Password ?? "123456");
+            var result = await _userManager.CreateAsync(user, employee.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, employee.Role ?? "Staff");
+                await _userManager.AddToRoleAsync(user, employee.Role);
+
+                // Sau khi Identity thành công mới tạo bản ghi Employee
+                _context.Employees.Add(employee);
+                await _context.SaveChangesAsync();
 
                 // Gửi OTP/Thông báo cho nhân viên mới
-                var otp = new Random().Next(100000, 999999).ToString();
-                _cache.Set($"OTP_{employee.Email}", otp, TimeSpan.FromMinutes(10));
-                await _emailService.SendEmailAsync(employee.Email, "Tài khoản nhân viên mới", otp, employee.FullName);
+                try {
+                    var otp = new Random().Next(100000, 999999).ToString();
+                    _cache.Set($"OTP_ChangePwd_{user.Id}", otp, TimeSpan.FromMinutes(10)); // Set OTP cho lần đăng nhập đầu tiên
+                    await _emailService.SendEmailAsync(employee.Email, "Tài khoản nhân viên mới", $"Mã xác thực đăng nhập của bạn là: {otp}", employee.FullName);
+                } catch {
+                    // Ignore email errors in dev
+                }
+
+                return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Index));
+            // Nếu thất bại
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            
+            return View("~/Views/Employee/index.cshtml", await _context.Employees.OrderByDescending(x => x.Id).ToListAsync());
         }
 
         // =========================
@@ -148,8 +165,15 @@ namespace LibraryManagementSystem.Controllers
 
             if (!string.IsNullOrEmpty(employee.Password))
             {
-                existingEmployee.Password =
-                    employee.Password;
+                existingEmployee.Password = employee.Password;
+                
+                // Cập nhật mật khẩu trong Identity
+                var user = await _userManager.FindByNameAsync(existingEmployee.Username);
+                if (user != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    await _userManager.ResetPasswordAsync(user, token, employee.Password);
+                }
             }
 
             await _context.SaveChangesAsync();
