@@ -55,13 +55,33 @@ namespace LibraryManagementSystem.Controllers
                 await _context.BorrowTickets
                     .Include(x => x.Customer)
                     .OrderByDescending(x => x.Id)
-                    .Take(6)
+                    .Take(20)
                     .ToListAsync();
-            ViewBag.LatestBooks =
-                await _context.Books
-                    .OrderByDescending(x => x.Id)
-                    .Take(5)
-                    .ToListAsync();
+            ViewBag.TopCategories =
+    await _context.Categories
+
+        .Select(x => new
+        {
+            Name = x.Name,
+
+            TotalBooks =
+                _context.Books
+                    .Count(b => b.CategoryId == x.Id),
+
+            TotalBorrowed =
+                _context.BorrowTicketDetails
+                    .Count(td =>
+                        td.Book.CategoryId == x.Id
+                    )
+        })
+
+        .OrderByDescending(x => x.TotalBorrowed)
+
+        .ThenByDescending(x => x.TotalBooks)
+
+        .Take(20)
+
+        .ToListAsync();
             return View(
                 "~/Views/Admin/index.cshtml"
             );
