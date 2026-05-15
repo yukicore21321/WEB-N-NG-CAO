@@ -21,36 +21,41 @@ namespace LibraryManagementSystem.Controllers
             _environment = environment;
         }
 
-        // INDEX
-        [HttpGet("")]
-        public async Task<IActionResult> Index(string? keyword)
-        {
-            ViewBag.Categories =
-                await _context.Categories.ToListAsync();
+       [HttpGet("")]
+public async Task<IActionResult> Index(
+    int? categoryId
+)
+{
+    var query = _context.Books
 
-            var query = _context.Books
-    .Include(x => x.Category)
-    .AsQueryable();
+        .Include(x => x.Category)
 
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                query = query.Where(x =>
+        .AsQueryable();
 
-                    x.Title.Contains(keyword)
-                );
-            }
+    // lọc theo thể loại
+    if (categoryId.HasValue)
+    {
+        query = query.Where(x =>
+            x.CategoryId == categoryId.Value
+        );
+    }
 
-            var books = await query
+    var books = await query
+        .OrderByDescending(x => x.Id)
+        .ToListAsync();
 
-                .OrderByDescending(x => x.Id)
+    ViewBag.Categories =
+        await _context.Categories
+            .OrderBy(x => x.Name)
+            .ToListAsync();
 
-                .ToListAsync();
-            ViewBag.Keyword = keyword;
-            return View(
-                "Views/Book/index.cshtml",
-                books
-            );
-        }
+    ViewBag.CategoryId = categoryId;
+
+    return View(
+        "~/Views/Book/index.cshtml",
+        books
+    );
+}
 
         // CREATE
         [HttpPost("Create")]
