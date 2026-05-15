@@ -50,12 +50,12 @@ namespace LibraryManagementSystem.Controllers
             ViewBag.TotalBorrowing =
                 await _context.BorrowTickets
                     .CountAsync(x => x.Status != "Returned");
-            ViewBag.TotalOverdue =
-                await _context.BorrowTickets
-                    .CountAsync(x =>
-                        x.Status != "Returned" &&
-                        x.DueDate < DateTime.Now
-                    );
+            ViewBag.TotalOverdue = await _context.BorrowTickets
+    .CountAsync(x =>
+        x.Status != "Returned" &&
+        x.DueDate.Date < DateTime.Now.Date
+    );
+            
             ViewBag.TotalBorrowedBooks =
                 await _context.BorrowTicketDetails.CountAsync();
             ViewBag.RecentTickets =
