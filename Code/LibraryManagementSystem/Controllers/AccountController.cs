@@ -45,6 +45,7 @@ namespace LibraryManagementSystem.Controllers
         {
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
+                username = username?.Trim();
                 var user = await _userManager.FindByNameAsync(username) ?? await _userManager.FindByEmailAsync(username);
                 if (user != null)
                 {
@@ -176,6 +177,7 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string username)
         {
+            username = username?.Trim();
             var user = await _userManager.FindByNameAsync(username) ?? await _userManager.FindByEmailAsync(username);
             if (user != null)
             {
@@ -284,6 +286,8 @@ namespace LibraryManagementSystem.Controllers
         [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Register(string name, string email, string username, string role)
         {
+            username = username?.Trim();
+            email = email?.Trim();
             // Kiểm tra phân quyền tạo account
             if (User.IsInRole("Staff") && role != "User")
             {
@@ -305,6 +309,23 @@ namespace LibraryManagementSystem.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, role);
+
+                // Nếu là Staff hoặc Admin, tạo bản ghi bên bảng Employee để làm việc
+                if (role == "Staff" || role == "Admin")
+                {
+                    var employee = new Employee
+                    {
+                        Username = username,
+                        Password = tempPass, // Mật khẩu tạm thời
+                        FullName = name,
+                        Email = email,
+                        Role = role,
+                        IsActive = true,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.Employees.Add(employee);
+                    await _context.SaveChangesAsync();
+                }
 
                 var otp = new Random().Next(100000, 999999).ToString();
                 _cache.Set($"OTP_{email}", otp, TimeSpan.FromMinutes(10));

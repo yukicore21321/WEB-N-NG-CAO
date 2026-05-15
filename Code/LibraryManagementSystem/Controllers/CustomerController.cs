@@ -73,13 +73,39 @@ namespace LibraryManagementSystem.Controllers
             }
 
             customer.CreatedAt = DateTime.Now;
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
 
-            // Xóa OTP sau khi dùng xong
-            _cache.Remove($"OTP_{customer.Email}");
+            // ĐỒNG BỘ: Tạo tài khoản Identity cho khách hàng để có thể đăng nhập
+            var user = new ApplicationUser
+            {
+                UserName = customer.Email,
+                Email = customer.Email,
+                FullName = customer.FullName,
+                PhoneNumber = customer.Phone,
+                EmailConfirmed = true
+            };
 
-            return RedirectToAction(nameof(Index));
+            // Mật khẩu mặc định cho khách hàng là sđt hoặc một pass cố định
+            var pass = !string.IsNullOrEmpty(customer.Phone) ? customer.Phone : "Customer@123";
+            var result = await _userManager.CreateAsync(user, pass);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+
+                _context.Customers.Add(customer);
+                await _context.SaveChangesAsync();
+
+                // Xóa OTP sau khi dùng xong
+                _cache.Remove($"OTP_{customer.Email}");
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View("Views/Customer/Index.cshtml", await _context.Customers.ToListAsync());
         }
 
         // =========================
