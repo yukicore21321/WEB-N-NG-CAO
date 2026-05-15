@@ -299,26 +299,32 @@ namespace LibraryManagementSystem.Controllers
         // DETAIL
         // =========================
 
-        [HttpGet("Detail/{id}")]
-        public async Task<IActionResult> Detail(int id)
-        {
-            var ticket =
-                await _context.BorrowTickets
+       [HttpGet("Detail/{id}")]
+public async Task<IActionResult> Detail(int id)
+{
+    var ticket = await _context.BorrowTickets
 
-                    .Include(x => x.Customer)
+        .Include(x => x.Customer)
 
-                    .Include(x => x.TicketDetails)
-                        .ThenInclude(td => td.Book)
+        .Include(x => x.CreatedByEmployee)
 
-                    .FirstOrDefaultAsync(x => x.Id == id);
+        .Include(x => x.ReceivedByEmployee)
 
-            if (ticket == null)
-            {
-                return NotFound();
-            }
+        .Include(x => x.TicketDetails)
+            .ThenInclude(x => x.Book)
 
-            return Json(ticket);
-        }
+        .FirstOrDefaultAsync(x => x.Id == id);
+
+    if (ticket == null)
+    {
+        return NotFound();
+    }
+
+    return View(
+        "~/Views/BorrowTicketDetail/index.cshtml",
+        ticket
+    );
+}
 
         [HttpPost("MarkReturned/{id}")]
         public async Task<IActionResult> MarkReturned(int id)
@@ -369,5 +375,7 @@ namespace LibraryManagementSystem.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        
     }
 }

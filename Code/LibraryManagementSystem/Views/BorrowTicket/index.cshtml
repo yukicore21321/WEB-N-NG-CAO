@@ -405,40 +405,67 @@
     </button>
 }
 
-                                <!-- DELETE -->
-                                <form asp-controller="BorrowTicket" asp-action="Delete" asp-route-id="@item.Id" method="post"
-                                      onsubmit="return confirm('Bạn có chắc muốn xoá phiếu mượn này?');">
-
-                                    <button type="submit" class="btn btn-sm">
-
-                                        <img src="~/images/trash-icon.png" width="32" height="32" />
-
-                                    </button>
-
-                                </form>
-                    @if (item.Status != "Returned")
-
+                               <!-- DELETE -->
+@if (item.Status != "Returned")
 {
-
     <form asp-controller="BorrowTicket"
-
-          asp-action="MarkReturned"
-
+          asp-action="Delete"
           asp-route-id="@item.Id"
-
-          method="post">
+          method="post"
+          onsubmit="return confirm('Bạn có chắc muốn xoá phiếu mượn này?');">
 
         <button type="submit"
+                class="btn btn-sm">
 
-                class="btn btn-success btn-sm">
-
-            Đã trả
+            <img src="~/images/trash-icon.png"
+                 width="32"
+                 height="32" />
 
         </button>
 
     </form>
-
 }
+else
+{
+    <button class="btn btn-sm"
+            disabled
+            style="opacity:0.5;cursor:not-allowed;">
+
+        <img src="~/images/trash-icon.png"
+             width="32"
+             height="32" />
+
+    </button>
+}
+                @if (item.Status != "Returned")
+{
+    <form asp-controller="BorrowTicket"
+          asp-action="MarkReturned"
+          asp-route-id="@item.Id"
+          method="post"
+          onsubmit="return confirm('Xác nhận khách đã trả sách?');">
+
+        <button type="submit"
+                class="btn btn-success btn-sm">
+
+            Trả sách
+
+        </button>
+
+    </form>
+}
+else
+{
+    <a href="/Admin/BorrowTicket/Detail/@item.Id"
+       class="btn btn-sm">
+
+        <img src="~/images/eye-icon.png"
+             width="32"
+             height="32" />
+
+    </a>
+}
+
                             </div>
 
                         </td>
