@@ -83,7 +83,7 @@ namespace LibraryManagementSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                var errors = string.Join(", ", ModelState.Keys.SelectMany(key => ModelState[key].Errors.Select(e => $"{key}: {e.ErrorMessage}")));
                 ModelState.AddModelError("", "Dữ liệu không hợp lệ: " + errors);
                 return View("~/Views/Employee/index.cshtml", await _context.Employees.OrderByDescending(x => x.Id).ToListAsync());
             }
