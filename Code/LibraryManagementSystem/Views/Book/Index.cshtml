@@ -261,6 +261,7 @@
                 <th>Tên sách</th>
                 <th>Mô tả</th>
                 <th>Tác giả</th>
+                <th>Thể loại</th>
                 <th>Số lượng</th>
                 <th>Có sẵn</th>
                 <th width="150">Hành động</th>
@@ -290,6 +291,9 @@
                             : item.Description)
                         </td>
                         <td>@item.Author</td>
+                        <td>
+                            @(item.Category?.Name ?? "")
+                        </td>
                         <td>@item.Quantity</td>
                         <td>@item.AvailableQuantity</td>
                         <td>
