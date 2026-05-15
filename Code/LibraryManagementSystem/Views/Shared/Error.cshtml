@@ -1,25 +1,41 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Lỗi hệ thống";
+    // Check if user is staff/admin to use appropriate layout
+    if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Staff")))
+    {
+        Layout = "_AdminLayout";
+    }
+    else
+    {
+        Layout = "_UserLayout";
+    }
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div style="position: absolute; width: 1004px; height: 392px; left: 61px; top: 200px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px;">
+    <!-- Icon Frame (Grey Background) -->
+    <div style="width: 127px; height: 140px; background: rgba(167, 167, 167, 0.48); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    <div style="font-family: 'Montserrat'; font-weight: 700; font-size: 60px; color: #151619; margin-bottom: 10px;">404/500</div>
+    <div style="font-family: 'Montserrat'; font-weight: 700; font-size: 24px; color: #151619; margin-bottom: 16px;">ĐÃ CÓ LỖI XẢY RA</div>
+    <p style="font-family: 'Montserrat'; font-weight: 400; font-size: 16px; color: #3D3E3E; max-width: 600px; line-height: 140%;">
+        Trang bạn tìm kiếm không tồn tại hoặc hệ thống đang gặp sự cố. Vui lòng quay lại trang chủ.
     </p>
-}
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    @if (Model.ShowRequestId)
+    {
+        <p style="font-family: 'Montserrat'; font-size: 12px; color: #727374; margin-top: 10px;">
+            Mã lỗi: <code>@Model.RequestId</code>
+        </p>
+    }
+
+    <div style="margin-top: 32px; display: flex; gap: 20px;">
+        <a href="/" style="width: 200px; height: 50px; background: #000000; color: #FFFFFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'Montserrat'; font-weight: 700; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            QUAY LẠI TRANG CHỦ
+        </a>
+    </div>
+</div>

@@ -19,6 +19,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequireUppercase = false;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
+.AddRoles<IdentityRole>()
 .AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -34,6 +35,8 @@ builder.Services.AddRazorPages(); // Required for Identity UI if used
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

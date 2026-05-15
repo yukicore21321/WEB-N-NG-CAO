@@ -292,14 +292,22 @@
                 <path d="M12.13 60.42H87.88C87.88 60.42 85 93.75 50 93.75C15 93.75 12.13 60.42 12.13 60.42Z" fill="#000000"/>
             </svg>
         </div>
-@{
-    var currentUser = await UserManager.GetUserAsync(User);
-    var fullName = currentUser?.FullName ?? "User";
-    var roles = await UserManager.GetRolesAsync(currentUser!);
-    var roleName = roles.FirstOrDefault() ?? "Guest";
-}
+        @{
+            var currentUser = await UserManager.GetUserAsync(User);
+            var fullName = currentUser?.FullName ?? "User";
+            var roles = await UserManager.GetRolesAsync(currentUser!);
+            var roleName = roles.FirstOrDefault() ?? "Guest";
+
+            // Translate role name
+            var displayRole = roleName switch {
+                "Admin" => "Quản trị viên",
+                "Staff" => "Nhân viên",
+                "User" => "Khách hàng",
+                _ => roleName
+            };
+        }
         <div style="position: absolute; left: 61px; top: 16px; font-weight: 600; font-size: 16px; color: #000000;">@fullName</div>
-        <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">@roleName</div>
+        <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">@displayRole</div>
 
         <!-- Right Side Section -->
         <div id="clockTime" style="position: absolute; left: 1681px; top: 15px; font-weight: 700; font-size: 16px; color: #000000;">--:-- --</div>

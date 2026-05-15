@@ -48,9 +48,12 @@ namespace LibraryManagementSystem.Controllers
                 var user = await _userManager.FindByNameAsync(username) ?? await _userManager.FindByEmailAsync(username);
                 if (user != null)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
                     if (result.Succeeded)
                     {
+                        // Đăng nhập lại để đảm bảo Claims (bao gồm Roles) được cập nhật mới nhất
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        
                         if (user.MustChangePassword)
                         {
                             TempData["UserId"] = user.Id;
@@ -61,12 +64,29 @@ namespace LibraryManagementSystem.Controllers
                             
                             return RedirectToAction("VerifyOTPChangePassword");
                         }
-                        return RedirectToAction("Index", "Admin");
+
+                        // Kiểm tra quyền hạn trước khi chuyển hướng
+                        var roles = await _userManager.GetRolesAsync(user);
+                        if (roles.Contains("Admin") || roles.Contains("Staff"))
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+                        else
+                        {
+                            // Nếu là User thường, chuyển sang UserDashboard (hoặc trang tương ứng)
+                            return RedirectToAction("UserDashboard", "Home");
+                        }
                     }
+                    if (result.IsLockedOut) ViewBag.Error = "Tài khoản bị khóa.";
+                    else if (result.IsNotAllowed) ViewBag.Error = "Bạn không được phép đăng nhập.";
+                    else ViewBag.Error = "Mật khẩu không chính xác.";
+                }
+                else
+                {
+                    ViewBag.Error = "Không tìm thấy tài khoản này.";
                 }
             }
             
-            ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng.";
             return View();
         }
 
@@ -305,6 +325,24 @@ namespace LibraryManagementSystem.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Debug()
+        {
+            var info = new
+            {
+                User = User.Identity?.Name,
+                IsAuthenticated = User.Identity?.IsAuthenticated,
+                Claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList()
+            };
+            return Json(info);
         }
     }
 }

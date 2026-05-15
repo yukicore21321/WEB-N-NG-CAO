@@ -34,6 +34,13 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                Console.WriteLine($"User: {user.UserName}, Roles: {string.Join(", ", roles)}");
+            }
+            
             ViewBag.TotalBooks =
                 await _context.Books.CountAsync();
             ViewBag.TotalCategories =

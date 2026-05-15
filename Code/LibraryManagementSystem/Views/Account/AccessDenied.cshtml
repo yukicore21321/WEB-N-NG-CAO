@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+    // Check if user is staff/admin to use appropriate layout
+    if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+    {
+        Layout = "_AdminLayout";
+    }
+    else
+    {
+        Layout = "_UserLayout";
+    }
+}
+
+<div style="position: absolute; width: 1004px; height: 392px; left: 61px; top: 200px; background: #FFFFFF; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px;">
+    <!-- Icon Frame (Grey Background) -->
+    <div style="width: 127px; height: 140px; background: rgba(167, 167, 167, 0.48); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <div style="font-family: 'Montserrat'; font-weight: 700; font-size: 60px; color: #151619; margin-bottom: 10px;">403</div>
+    <div style="font-family: 'Montserrat'; font-weight: 700; font-size: 24px; color: #151619; margin-bottom: 16px;">TRUY CẬP BỊ TỪ CHỐI</div>
+    <p style="font-family: 'Montserrat'; font-weight: 400; font-size: 16px; color: #3D3E3E; max-width: 600px; line-height: 140%;">
+        Bạn không có quyền truy cập vào khu vực này. Vui lòng liên hệ quản trị viên hoặc đăng nhập bằng tài khoản có quyền cao hơn.
+    </p>
+
+    <div style="margin-top: 32px; display: flex; gap: 20px;">
+        <a href="/Account/Login" style="width: 200px; height: 50px; background: #000000; color: #FFFFFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'Montserrat'; font-weight: 700; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            ĐĂNG NHẬP LẠI
+        </a>
+        <a href="/" style="width: 200px; height: 50px; background: #FFFFFF; color: #000000; border: 1px solid #3D3E3E; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'Montserrat'; font-weight: 700; font-size: 14px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            TRANG CHỦ
+        </a>
+    </div>
+</div>
