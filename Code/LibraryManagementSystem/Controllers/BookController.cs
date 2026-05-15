@@ -6,6 +6,7 @@ using LibraryManagementSystem.Models;
 namespace LibraryManagementSystem.Controllers
 {
     [Route("Admin/Book")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,Staff")]
     public class BookController : Controller
     {
         private readonly ApplicationDbContext _context;

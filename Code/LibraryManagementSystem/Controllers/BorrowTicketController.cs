@@ -6,13 +6,18 @@ using LibraryManagementSystem.Models;
 namespace LibraryManagementSystem.Controllers
 {
     [Route("Admin/BorrowTicket")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,Staff")]
     public class BorrowTicketController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
 
-        public BorrowTicketController(ApplicationDbContext context)
+        public BorrowTicketController(
+            ApplicationDbContext context,
+            Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // =========================
@@ -91,12 +96,26 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            borrowTicket.CreatedAt =
-                DateTime.Now;
-            borrowTicket.CreatedByEmployeeId = 1;
+            var username = User.Identity?.Name;
+            var appUser = await _userManager.FindByNameAsync(username ?? "");
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => 
+                e.Username == username || (appUser != null && e.Email == appUser.Email));
+
+            if (employee == null)
+            {
+                // Fallback to the first available employee if the current user isn't in the Employee table
+                employee = await _context.Employees.FirstOrDefaultAsync();
+            }
+
+            if (employee == null)
+            {
+                return BadRequest("Hệ thống không tìm thấy nhân viên nào trong bảng Employees để gán làm người tạo phiếu. Vui lòng thêm nhân viên trước.");
+            }
+            
+            borrowTicket.CreatedAt = DateTime.Now;
+            borrowTicket.CreatedByEmployeeId = employee.Id;
             borrowTicket.ReceivedByEmployeeId = null;
-            borrowTicket.Status =
-                "Borrowed";
+            borrowTicket.Status = "Borrowed";
 
             _context.BorrowTickets.Add(borrowTicket);
 
@@ -175,10 +194,17 @@ namespace LibraryManagementSystem.Controllers
                 existingTicket.TicketDetails
             );
 
+            var username = User.Identity?.Name;
+            var appUser = await _userManager.FindByNameAsync(username ?? "");
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => 
+                e.Username == username || (appUser != null && e.Email == appUser.Email));
+
             // update ticket
-            existingTicket.CustomerId =
-                borrowTicket.CustomerId;
-            existingTicket.CreatedByEmployeeId = 1;
+            existingTicket.CustomerId = borrowTicket.CustomerId;
+            if (employee != null)
+            {
+                existingTicket.CreatedByEmployeeId = employee.Id;
+            }
             existingTicket.ReceivedByEmployeeId = null;
             existingTicket.BorrowDate =
                 borrowTicket.BorrowDate;
@@ -311,9 +337,22 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var username = User.Identity?.Name;
+            var appUser = await _userManager.FindByNameAsync(username ?? "");
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => 
+                e.Username == username || (appUser != null && e.Email == appUser.Email));
+
             ticket.Status = "Returned";
             ticket.ReturnDate = DateTime.Now;
-            ticket.ReceivedByEmployeeId = 1;
+            if (employee != null)
+            {
+                ticket.ReceivedByEmployeeId = employee.Id;
+            }
+            else
+            {
+                // Fallback to the creator if not found
+                ticket.ReceivedByEmployeeId = ticket.CreatedByEmployeeId;
+            }
 
             if (ticket.TicketDetails != null)
             {

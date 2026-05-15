@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 namespace LibraryManagementSystem.Controllers
 {
     [Route("Admin/Customer")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,Staff")]
     public class CustomerController : Controller
     {
         private readonly ApplicationDbContext _context;

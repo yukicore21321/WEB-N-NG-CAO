@@ -10,6 +10,7 @@ namespace LibraryManagementSystem.Controllers
     // [Authorize]v
 
     [Route("Admin/Categories")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,Staff")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

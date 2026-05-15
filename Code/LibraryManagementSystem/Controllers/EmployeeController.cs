@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace LibraryManagementSystem.Controllers
 {
     [Route("Admin/Employee")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;

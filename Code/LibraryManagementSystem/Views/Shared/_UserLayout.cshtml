@@ -160,13 +160,74 @@
             font-size: 16px;
             transition: opacity 0.3s;
         }
+
+        .dropdown-item:hover {
+            background: #F5F5F5;
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Settings Dropdown */
+        .settings-dropdown {
+            position: absolute;
+            top: 71px;
+            right: 0;
+            width: 200px;
+            background: #FFFFFF;
+            border: 1px solid #E8E8E8;
+            border-top: none;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            border-bottom-left-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Logout Modal Specific */
+        .logout-popup-content {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            background: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <aside class="sidebar-container">
         <!-- Main Logo (logo.svg) -->
         <div style="position: absolute; width: 60px; height: 60px; left: 16px; top: 16px; display: flex; align-items: center; justify-content: center;">
-            <img src="/images/logo.svg" alt="Logo" style="width: 100%; height: auto; filter: brightness(0) invert(1);" />
+            <a asp-controller="Home" asp-action="UserDashboard">
+                <img src="~/images/logo.svg" alt="Logo" asp-append-version="true" style="width: 100%; height: auto; filter: brightness(0) invert(1);" />
+            </a>
         </div>
 
         <!-- Dashboard Button -->
@@ -218,16 +279,7 @@
             </a>
         }
 
-        <!-- Exit Button -->
-        <form asp-controller="Account" asp-action="Logout" method="post">
-            <button type="submit" class="sidebar-btn inactive-btn" style="top: 931px;">
-                <div class="btn-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 16L21 12M21 12L17 8M21 12H9M13 16V17C13 18.6569 11.6569 20 10 20H5C3.34315 20 2 18.6569 2 17V7C2 5.34315 3.34315 4 5 4H10C11.6569 4 13 5.34315 13 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-            </button>
-        </form>
+
     </aside>
 
     <header style="position: absolute; width: calc(100% - 93px); height: 71px; left: 93px; top: 0px; background: #FFFFFF; z-index: 90; border-bottom: 1px solid #E8E8E8;">
@@ -250,17 +302,36 @@
         <div style="position: absolute; left: 61px; top: 38px; font-weight: 600; font-size: 12px; color: #000000;">@roleName</div>
 
         <!-- Right Side Section -->
-        <div style="position: absolute; left: 1681px; top: 15px; font-weight: 700; font-size: 16px; color: #000000;">12:29 PM</div>
-        <div style="position: absolute; left: 1669px; top: 39px; font-weight: 500; font-size: 13px; color: #000000;">Sep 02, 2023</div>
+        <div id="clockTime" style="position: absolute; left: 1681px; top: 15px; font-weight: 700; font-size: 16px; color: #000000;">--:-- --</div>
+        <div id="clockDate" style="position: absolute; left: 1669px; top: 39px; font-weight: 500; font-size: 13px; color: #000000;">--- --, ----</div>
         
         <!-- Line 16 -->
         <div style="position: absolute; width: 2px; height: 58px; left: 1764px; top: 7px; background: #000000;"></div>
         
         <!-- Settings Icon -->
-        <div style="position: absolute; width: 71px; height: 71px; right: 0; top: 0; border-left: 1px solid #E8E8E8; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="togglePopup(true)">
+        <div id="settingsIcon" style="position: absolute; width: 71px; height: 71px; right: 0; top: 0; border-left: 1px solid #E8E8E8; display: flex; align-items: center; justify-content: center; cursor: pointer;">
             <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M28.6583 10.5433C25.7925 10.5433 24.6208 8.51659 26.0458 6.03076C26.8692 4.58993 26.3783 2.75326 24.9375 1.92993L22.1983 0.362427C20.9475 -0.38174 19.3325 0.0615939 18.5883 1.31243L18.4142 1.61326C16.9892 4.09909 14.6458 4.09909 13.205 1.61326L13.0308 1.31243C12.3183 0.0615939 10.7033 -0.38174 9.4525 0.362427L6.71333 1.92993C5.2725 2.75326 4.78167 4.60576 5.605 6.04659C7.04583 8.51659 5.87417 10.5433 3.00833 10.5433C1.36167 10.5433 0 11.8891 0 13.5516V16.3383C0 17.9849 1.34583 19.3466 3.00833 19.3466C5.87417 19.3466 7.04583 21.3733 5.605 23.8591C4.78167 25.2999 5.2725 27.1366 6.71333 27.9599L9.4525 29.5274C10.7033 30.2716 12.3183 29.8283 13.0625 28.5774L13.2367 28.2766C14.6617 25.7908 17.005 25.7908 18.4458 28.2766L18.62 28.5774C19.3642 29.8283 20.9792 30.2716 22.23 29.5274L24.9692 27.9599C26.41 27.1366 26.9008 25.2841 26.0775 23.8591C24.6367 21.3733 25.8083 19.3466 28.6742 19.3466C30.3208 19.3466 31.6825 18.0008 31.6825 16.3383V13.5516C31.6667 11.9049 30.3208 10.5433 28.6583 10.5433ZM15.8333 20.0908C12.9992 20.0908 10.6875 17.7791 10.6875 14.9449C10.6875 12.1108 12.9992 9.79909 15.8333 9.79909C18.6675 9.79909 20.9792 12.1108 20.9792 14.9449C20.9792 17.7791 18.6675 20.0908 15.8333 20.0908Z" fill="black"/>
             </svg>
+        </div>
+
+        <!-- Settings Dropdown -->
+        <div class="settings-dropdown" id="settingsDropdown" style="top: 71px; right: 0;">
+            <button class="dropdown-item" onclick="event.stopPropagation(); togglePopup(true)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Đổi mật khẩu
+            </button>
+            <button class="dropdown-item" onclick="event.stopPropagation(); toggleLogoutPopup(true)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Đăng xuất
+            </button>
         </div>
     </header>
 
@@ -313,16 +384,81 @@
         </div>
     </div>
 
+    <!-- Logout Confirmation PopUp -->
+    <div id="logoutPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="logout-popup-content">
+            <div style="width: 60px; height: 60px; background: #FFE5E5; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF4D4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </div>
+            <h2 style="font-family: 'Montserrat'; font-weight: 600; font-size: 20px; color: #151619; margin-bottom: 10px;">Đăng xuất</h2>
+            <p style="font-family: 'Montserrat'; font-size: 16px; color: #3D3E3E; margin-bottom: 30px;">Bạn có chắc chắn muốn đăng xuất không?</p>
+            
+            <div style="display: flex; gap: 20px; width: 100%;">
+                <button onclick="toggleLogoutPopup(false)" style="flex: 1; height: 54px; background: #D7D7D7; border-radius: 10px; border: none; cursor: pointer; font-family: 'Montserrat'; font-weight: 700; font-size: 16px;">KHÔNG</button>
+                <form asp-controller="Account" asp-action="Logout" method="post" style="flex: 1;">
+                    <button type="submit" style="width: 100%; height: 54px; background: #FF4D4D; color: #FFFFFF; border-radius: 10px; border: none; cursor: pointer; font-family: 'Montserrat'; font-weight: 700; font-size: 16px;">CÓ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function togglePopup(show) {
-            const popup = document.getElementById('credentialsPopup');
-            popup.style.display = show ? 'flex' : 'none';
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsDropdown = document.getElementById('settingsDropdown');
+
+        settingsIcon.onclick = function(e) {
+            e.stopPropagation();
+            settingsDropdown.style.display = settingsDropdown.style.display === 'flex' ? 'none' : 'flex';
         }
+
+        function togglePopup(show) {
+            settingsDropdown.style.display = 'none';
+            const popup = document.getElementById('credentialsPopup');
+            if (popup) popup.style.display = show ? 'flex' : 'none';
+        }
+
+        function toggleLogoutPopup(show) {
+            settingsDropdown.style.display = 'none';
+            const popup = document.getElementById('logoutPopup');
+            if (popup) popup.style.display = show ? 'flex' : 'none';
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const dateOptions = { month: 'short', day: '2-digit', year: 'numeric' };
+            
+            const timeEl = document.getElementById('clockTime');
+            const dateEl = document.getElementById('clockDate');
+            if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
+            if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
         // Close on escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') togglePopup(false);
+            if (e.key === 'Escape') {
+                togglePopup(false);
+                toggleLogoutPopup(false);
+            }
         });
+
+        window.onclick = function(event) {
+            const credentialsPopup = document.getElementById('credentialsPopup');
+            const logoutPopup = document.getElementById('logoutPopup');
+            
+            if (event.target == credentialsPopup) togglePopup(false);
+            if (event.target == logoutPopup) toggleLogoutPopup(false);
+            
+            if (settingsDropdown && !event.target.closest('#settingsIcon') && !event.target.closest('#settingsDropdown')) {
+                settingsDropdown.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>
