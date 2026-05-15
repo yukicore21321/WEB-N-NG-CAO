@@ -81,9 +81,20 @@ namespace LibraryManagementSystem.Controllers
                 employee.Password = "123456";
             }
 
-            // check if username or email already exists in Identity
-            var existingUser = await _userManager.FindByNameAsync(employee.Username) ?? await _userManager.FindByEmailAsync(employee.Email);
-            if (existingUser != null)
+            if (!ModelState.IsValid)
+            {
+                var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                ModelState.AddModelError("", "Dữ liệu không hợp lệ: " + errors);
+                return View("~/Views/Employee/index.cshtml", await _context.Employees.OrderByDescending(x => x.Id).ToListAsync());
+            }
+
+            // check if username or email already exists in Identity or Employees table
+            var existingIdentityUser = await _userManager.FindByNameAsync(employee.Username) ?? 
+                                        (!string.IsNullOrEmpty(employee.Email) ? await _userManager.FindByEmailAsync(employee.Email) : null);
+            
+            var existingEmployee = await _context.Employees.AnyAsync(e => e.Username == employee.Username || (!string.IsNullOrEmpty(employee.Email) && e.Email == employee.Email));
+
+            if (existingIdentityUser != null || existingEmployee)
             {
                 ModelState.AddModelError("", "Tài khoản hoặc Email đã tồn tại trong hệ thống.");
                 return View("~/Views/Employee/index.cshtml", await _context.Employees.OrderByDescending(x => x.Id).ToListAsync());

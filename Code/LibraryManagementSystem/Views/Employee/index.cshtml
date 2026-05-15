@@ -421,6 +421,8 @@
         <form id="formEmployee" method="post" enctype="multipart/form-data" asp-action="Create">
 
             <input type="hidden" id="employeeId" name="Id" />
+            
+            <div asp-validation-summary="All" class="text-danger" style="margin-left: 93px; margin-right: 93px; font-size: 13px; margin-top: -10px; margin-bottom: 10px;"></div>
 
             <div>
                 <!-- Full Name -->
@@ -473,10 +475,9 @@
                     right: 93px;
                     top: 250px;
                     ">
-                    <select class="modal-input" id="employeeIsActive" name="IsActive">
-                        <option value="">-- Chọn trạng thái --</option>
-                        <option value="true">hoạt động</option>
-                        <option value="false">Khoá</option>
+                    <select class="modal-input" id="employeeIsActive" name="IsActive" required>
+                        <option value="true">Hoạt động</option>
+                        <option value="false">Khóa</option>
                     </select>
                 </div>
                 <!-- Password -->
@@ -603,9 +604,15 @@
         employeeModal.style.display = "none";
     }
 
-
-
-
-
-
+    // Auto open modal if there are validation errors
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <text>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            employeeModal.style.display = "flex";
+            document.getElementById("modalTitle").innerText = "Thêm nhân viên";
+            // Don't reset form to keep the values (browsers usually keep them on reload if name matches)
+        });
+        </text>
+    }
 </script>
