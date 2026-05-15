@@ -261,6 +261,7 @@
         <thead class="table-dark">
 
             <tr>
+                 <th>STT</th>
                 <th>ID</th>
 
                 <th>Họ tên</th>
@@ -282,14 +283,16 @@
             @if (Model != null && Model.Any())
 
             {
+                int stt = 1;
 
                 @foreach (var item in Model)
 
                 {
 
                     <tr>
+                        <td>@stt</td>
 
-                        <td>@item.Id</td>
+                        <td>#@item.Id</td>
 
                         <td>@item.FullName</td>
 
@@ -350,6 +353,7 @@
                         </td>
 
                     </tr>
+                    stt++;
 
                 }
 

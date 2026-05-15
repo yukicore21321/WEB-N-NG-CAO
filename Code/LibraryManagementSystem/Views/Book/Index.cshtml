@@ -208,54 +208,40 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <h2>Quản lý sách</h2>
-         <div class="d-flex gap-3">
+        <div class="d-flex gap-3">
 
-        <!-- SEARCH -->
+            <!-- SEARCH -->
 
-        <form method="get"
+            <form method="get" asp-controller="Book" asp-action="Index">
 
-              asp-controller="Book"
+                <div class="d-flex gap-2">
 
-              asp-action="Index">
+                    <input type="text" name="keyword" value="@ViewBag.Keyword" class="form-control"
+                           placeholder="Tìm tên sách" style="width:320px;height:42px;" />
 
-            <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-dark">
 
-                <input type="text"
+                        Tìm kiếm
 
-                       name="keyword"
+                    </button>
 
-                       value="@ViewBag.Keyword"
+                </div>
 
-                       class="form-control"
+            </form>
 
-                       placeholder="Tìm tên sách"
-
-                       style="width:320px;height:42px;" />
-
-                <button type="submit"
-
-                        class="btn btn-dark">
-
-                    Tìm kiếm
-
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
+        </div>
         <button class="btn btn-dark" onclick="openModal()">
             Thêm sách
         </button>
-        
+
     </div>
-    
+
     <table class="table table-bordered table-hover align-middle">
 
         <thead class="table-dark">
 
             <tr>
+                <th>STT</th>
                 <th>ID</th>
                 <th>Bìa sách</th>
                 <th>Tên sách</th>
@@ -273,11 +259,12 @@
 
             @if (Model != null && Model.Any())
             {
+                int stt = 1;
                 @foreach (var item in Model)
                 {
                     <tr>
-
-                        <td>@item.Id</td>
+                        <td>@stt</td>
+                        <td>#@item.Id</td>
 
                         <td>
                             <img src="@item.ImageUrl" alt="Book Cover" width="100" style="object-fit: cover;" />
@@ -309,7 +296,7 @@
                                     @item.Quantity,
                                     @item.CategoryId,
                                     @item.PublishYear,
-                                     '@item.ImageUrl'
+                                    '@item.ImageUrl'
                                     )">
 
                                     <img src="~/images/edit-icon.png" width="32" height="32" fill="none" alt="Close Icon"
@@ -333,6 +320,7 @@
                         </td>
 
                     </tr>
+                    stt++;
                 }
             }
             else
@@ -533,52 +521,52 @@
     }
 
     function openEditModal(
-    id,
-    title,
-    description,
-    author,
-    publisher,
-    quantity,
-    categoryId,
-    publishYear,
-    imageUrl
-) {
+        id,
+        title,
+        description,
+        author,
+        publisher,
+        quantity,
+        categoryId,
+        publishYear,
+        imageUrl
+    ) {
 
-    document.getElementById("modalTitle")
-        .innerText = "Cập nhật sách";
+        document.getElementById("modalTitle")
+            .innerText = "Cập nhật sách";
 
-    document.getElementById("bookForm")
-        .action = "/Admin/Book/Edit";
+        document.getElementById("bookForm")
+            .action = "/Admin/Book/Edit";
 
-    document.getElementById("bookId").value =
-        id;
+        document.getElementById("bookId").value =
+            id;
 
-    document.getElementById("bookName").value =
-        title;
+        document.getElementById("bookName").value =
+            title;
 
-    document.getElementById("bookDescription").value =
-        description;
+        document.getElementById("bookDescription").value =
+            description;
 
-    document.getElementById("bookAuthor").value =
-        author;
+        document.getElementById("bookAuthor").value =
+            author;
 
-    document.getElementById("bookPublisher").value =
-        publisher;
+        document.getElementById("bookPublisher").value =
+            publisher;
 
-    document.getElementById("bookQuantity").value =
-        quantity;
+        document.getElementById("bookQuantity").value =
+            quantity;
 
-    document.getElementById("bookCategorySelect").value =
-        categoryId;
+        document.getElementById("bookCategorySelect").value =
+            categoryId;
 
-    document.getElementById("bookPublishYear").value =
-        publishYear;
+        document.getElementById("bookPublishYear").value =
+            publishYear;
 
-    document.getElementById("previewImage").src =
-        imageUrl;
+        document.getElementById("previewImage").src =
+            imageUrl;
 
-    modalBook.style.display = "flex";
-}
+        modalBook.style.display = "flex";
+    }
 
     const closeModalBook = () => {
         modalBook.style.display = "none";

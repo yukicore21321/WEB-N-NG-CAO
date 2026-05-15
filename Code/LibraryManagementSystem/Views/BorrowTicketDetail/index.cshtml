@@ -1,0 +1,375 @@
+@model LibraryManagementSystem.Models.BorrowTicket
+
+@{
+    ViewData["Title"] = "Chi tiết phiếu mượn";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+
+    .detail-container {
+
+        padding: 32px;
+    }
+
+    .detail-card {
+
+        background: white;
+
+        border-radius: 20px;
+
+        padding: 32px;
+
+        margin-bottom: 24px;
+
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .detail-title {
+
+        font-size: 28px;
+
+        font-weight: 700;
+
+        margin-bottom: 28px;
+    }
+
+    .detail-grid {
+
+        display: grid;
+
+        grid-template-columns: repeat(2,1fr);
+
+        gap: 20px;
+    }
+
+    .detail-item {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .detail-label {
+
+        font-size: 14px;
+
+        color: #777;
+
+        font-weight: 600;
+    }
+
+    .detail-value {
+
+        font-size: 16px;
+
+        font-weight: 600;
+
+        color: black;
+    }
+
+    .book-list {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 16px;
+    }
+
+    .book-item {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+        background: #F8F8F8;
+
+        border-radius: 16px;
+
+        padding: 14px;
+    }
+
+    .book-item img {
+
+        width: 70px;
+
+        height: 100px;
+
+        object-fit: cover;
+
+        border-radius: 12px;
+    }
+
+    .badge-custom {
+
+        padding: 8px 14px;
+
+        border-radius: 999px;
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        width: fit-content;
+    }
+
+    .badge-borrowed {
+
+        background: #FFF3CD;
+
+        color: #856404;
+    }
+
+    .badge-returned {
+
+        background: #D4EDDA;
+
+        color: #155724;
+    }
+
+    .badge-overdue {
+
+        background: #F8D7DA;
+
+        color: #721C24;
+    }
+
+</style>
+
+<div class="detail-container">
+
+    <div class="detail-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h2 class="detail-title">
+
+                Chi tiết phiếu mượn #@Model.Id
+
+            </h2>
+
+            <a href="/Admin/BorrowTicket"
+               class="btn btn-dark">
+
+                Quay lại
+
+            </a>
+
+        </div>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Khách hàng
+                </div>
+
+                <div class="detail-value">
+                    @(Model.Customer?.FullName ?? "")
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Số điện thoại
+                </div>
+
+                <div class="detail-value">
+                    @(Model.Customer?.Phone ?? "")
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Ngày mượn
+                </div>
+
+                <div class="detail-value">
+                    @Model.BorrowDate.ToString("dd/MM/yyyy")
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Hạn trả
+                </div>
+
+                <div class="detail-value">
+                    @Model.DueDate.ToString("dd/MM/yyyy")
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Ngày trả
+                </div>
+
+                <div class="detail-value">
+
+                    @(Model.ReturnDate != null
+                        ? Model.ReturnDate.Value.ToString("dd/MM/yyyy")
+                        : "Chưa trả")
+
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Trạng thái
+                </div>
+
+                <div>
+
+                    @if (
+                        Model.Status != "Returned" &&
+                        Model.DueDate.Date < DateTime.Now.Date
+                    )
+                    {
+                        <span class="badge-custom badge-overdue">
+                            Overdue
+                        </span>
+                    }
+                    else if (Model.Status == "Returned")
+                    {
+                        <span class="badge-custom badge-returned">
+                            Returned
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-custom badge-borrowed">
+                            Borrowed
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Nhân viên tạo
+                </div>
+
+                <div class="detail-value">
+                    @(Model.CreatedByEmployee?.FullName ?? "")
+                </div>
+
+            </div>
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Nhân viên nhận sách
+                </div>
+
+                <div class="detail-value">
+                    @(Model.ReceivedByEmployee?.FullName ?? "Chưa nhận")
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+
+            <div class="detail-label mb-2">
+                Ghi chú
+            </div>
+
+            <div class="detail-value">
+
+                @(string.IsNullOrEmpty(Model.Note)
+                    ? "Không có ghi chú"
+                    : Model.Note)
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="detail-card">
+
+        <h3 class="mb-4">
+
+            Danh sách sách mượn
+
+        </h3>
+
+        <div class="book-list">
+
+            @if (
+                Model.TicketDetails != null &&
+                Model.TicketDetails.Any()
+            )
+            {
+                int stt = 1;
+
+                @foreach (var item in Model.TicketDetails)
+                {
+                    <div class="book-item">
+
+                        <div style="
+                            width:36px;
+                            height:36px;
+                            border-radius:50%;
+                            background:black;
+                            color:white;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-weight:700;
+                        ">
+                            @stt
+                        </div>
+
+                        <img src="@item.Book?.ImageUrl" />
+
+                        <div>
+
+                            <div style="
+                                font-size:18px;
+                                font-weight:700;
+                                margin-bottom:6px;
+                            ">
+                                @item.Book?.Title
+                            </div>
+
+                            <div style="
+                                color:#777;
+                                font-size:14px;
+                            ">
+                                @item.Book?.Author
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    stt++;
+                }
+            }
+
+        </div>
+
+    </div>
+
+</div>
